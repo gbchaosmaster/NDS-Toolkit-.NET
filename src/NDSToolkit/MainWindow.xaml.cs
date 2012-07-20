@@ -256,167 +256,159 @@ namespace NDS_Toolkit
             PtARDS.Text = "";
             PointerResults.Text = "";
 
-            try
+            //Check if both files have been opened
+            if (Length1 == 0 || Length2 == 0)
+                MessageBox.Show(this, "Please upload two files of the same size.",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            //compare the length of the files (in bytes/size)
+            if (openFileOne.OpenFile().Length != openFileTwo.OpenFile().Length)
+                MessageBox.Show(this, "The files you uploaded are different sizes!",
+                    "File Size Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            if (AddressOne.Text == AddressTwo.Text)
             {
-                //Check if both files have been opened
-                if (Length1 == 0 || Length2 == 0) 
-                    MessageBox.Show(this, "Please upload two files of the same size.", 
-                        "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(this, "Please input two different addresses.",
+                    "Duplicate Address Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                PointerResults.Text = "";
+            }
 
-                //compare the length of the files (in bytes/size)
-                if (openFileOne.OpenFile().Length != openFileTwo.OpenFile().Length)
-                    MessageBox.Show(this, "The files you uploaded are different sizes!", 
-                        "File Size Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            if (AddressOne.Text.Length > 6 && AddressTwo.Text.Length > 6)
+            {
+                //read the contents of the files
+                BinaryReader File1 = new BinaryReader(openFileOne.OpenFile());
+                BinaryReader File2 = new BinaryReader(openFileTwo.OpenFile());
 
-                if (AddressOne.Text == AddressTwo.Text)
+                //parse the text to an integer
+                int Addy1 = int.Parse(AddressOne.Text, NumberStyles.HexNumber);
+                int Addy2 = int.Parse(AddressTwo.Text, NumberStyles.HexNumber);
+
+                //loop through the file, from 0 to file size in bytes (32-bit aligned)
+                for (int x = 0; x < Length1; x += 4)
                 {
-                    MessageBox.Show(this, "Please input two different addresses.", 
-                        "Duplicate Address Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    PointerResults.Text = "";
-                }
+                    int Offset1 = Addy1 - File1.ReadInt32();
+                    int Offset2 = Addy2 - File2.ReadInt32();
+                    string Hex = "0x", PointerTemp = (x + 0x02000000).ToString("X8");
+                    int PointerTest = int.Parse(PointerTemp, NumberStyles.HexNumber);
 
-                if (AddressOne.Text.Length > 6 && AddressTwo.Text.Length > 6)
-                {
-                    //read the contents of the files
-                    BinaryReader File1 = new BinaryReader(openFileOne.OpenFile());
-                    BinaryReader File2 = new BinaryReader(openFileTwo.OpenFile());
+                    /*check if the offset is the same then output the pointer results
+                     *if addy1 and addy2 is greater than the pointer addresses, output the pointers.
+                     *The pointer addresses should be smaller than the addresses entered
+                     */
 
-                    //parse the text to an integer
-                    int Addy1 = int.Parse(AddressOne.Text, NumberStyles.HexNumber);
-                    int Addy2 = int.Parse(AddressTwo.Text, NumberStyles.HexNumber);
-
-                    //loop through the file, from 0 to file size in bytes (32-bit aligned)
-                    for (int x = 0; x < Length1; x += 4)
+                    if (Offset1 == Offset2)// && (Addy1 > PointerTest) && (Addy2 > PointerTest))
                     {
-                        int Offset1 = Addy1 - File1.ReadInt32();
-                        int Offset2 = Addy2 - File2.ReadInt32();
-                        string Hex = "0x", PointerTemp = (x + 0x02000000).ToString("X8");
-                        int PointerTest = int.Parse(PointerTemp, NumberStyles.HexNumber);
+                        int ValueAt = Addy1 - Offset1;
+                        string PointerAddress = PointerTest.ToString("X8");
+                        int DesiredOffset = 0;
+                        int MaxOffsetTest = int.Parse(MaxOffset.Text, NumberStyles.HexNumber);
 
-                        /*check if the offset is the same then output the pointer results
-                         *if addy1 and addy2 is greater than the pointer addresses, output the pointers.
-                         *The pointer addresses should be smaller than the addresses entered
+                        if (Positive.IsChecked == true)
+                            DesiredOffset = Math.Abs(MaxOffsetTest);
+                        else
+                            DesiredOffset = -Math.Abs(MaxOffsetTest);
+
+                        /*Based on the checkbox that was checked:
+                         *When Positive is checked, it'll check to see if the offset is than or equal to 
+                         *the positive max offset the user entered and it will then check if the offset 
+                         *is actually positive (greater than 0). 
+                         *
+                         *When Negative is checked, it'll check to see if the offset is greater than or
+                         *equal to the negative max offset the user entered and it will then check if the 
+                         *offset is actually negative (less than 0)
                          */
 
-                        if (Offset1 == Offset2)// && (Addy1 > PointerTest) && (Addy2 > PointerTest))
-                        {
-                            int ValueAt = Addy1 - Offset1;
-                            string PointerAddress = PointerTest.ToString("X8");
-                            int DesiredOffset = 0;
-                            int MaxOffsetTest = int.Parse(MaxOffset.Text, NumberStyles.HexNumber);
-
-                            if (Positive.IsChecked == true)
-                                DesiredOffset = Math.Abs(MaxOffsetTest);
-                            else
-                                DesiredOffset = -Math.Abs(MaxOffsetTest);
-
-                            /*Based on the checkbox that was checked:
-                             *When Positive is checked, it'll check to see if the offset is than or equal to 
-                             *the positive max offset the user entered and it will then check if the offset 
-                             *is actually positive (greater than 0). 
-                             *
-                             *When Negative is checked, it'll check to see if the offset is greater than or
-                             *equal to the negative max offset the user entered and it will then check if the 
-                             *offset is actually negative (less than 0)
-                             */
-
-                            if ((Offset1 <= DesiredOffset) && (Offset1 > 0) || (Offset1 >= DesiredOffset) && (Offset1 < 0))
-                                PointerResults.Text += Hex + PointerAddress + " : " + Hex + ValueAt.ToString("X8") + " :: " + Hex + Offset1.ToString("X8") + nLine;
-                        }
+                        if ((Offset1 <= DesiredOffset) && (Offset1 > 0) || (Offset1 >= DesiredOffset) && (Offset1 < 0))
+                            PointerResults.Text += Hex + PointerAddress + " : " + Hex + ValueAt.ToString("X8") + " :: " + Hex + Offset1.ToString("X8") + nLine;
                     }
-                }
-
-                /*SmallCheck = current value being processed, 
-                 *Smallest = smallest value, 
-                 *SmallestLineNumber = line number of smallest value
-                 */
-
-                int SmallCheck = 0, Smallest = 0, SmallestLineNumber = 0;
-                string[] Addresses = PointerResults.Text.Split('\n');
-
-                for (int i = 0; i < Addresses.Count(); i++)
-                {
-                    if (Addresses[i].Trim() != "")
-                    {
-                        string ValueOnly = Addresses[i].Substring(Addresses[i].IndexOf(":") + 18, 8);
-                        SmallCheck = int.Parse(ValueOnly, NumberStyles.AllowHexSpecifier);
-
-                        if (Smallest == 0 || SmallCheck < Smallest)
-                        {
-                            Smallest = SmallCheck;
-                            SmallestLineNumber = i;
-                        }
-                    }
-
-                    string Addy1Only = Addresses[SmallestLineNumber].Substring(3, 8);
-                    string OffsetOnly = Addresses[SmallestLineNumber].Substring(Addresses[SmallestLineNumber].IndexOf(":") + 18, 8);
-
-                    int CodeType = 0;
-                    int OffsetCheck = int.Parse(OffsetOnly, NumberStyles.AllowHexSpecifier);
-                    int ValueCheck = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
-
-                    //We need the proper code type...
-                    if (ValueCheck >= 0 && ValueCheck <= 255)
-                        CodeType = 2;
-                    else if (ValueCheck > 255 && ValueCheck <= 65535)
-                        CodeType = 1;
-                    else
-                        CodeType = 0;
-
-                    CodeType.ToString();
-                    string Value = ValueCheck.ToString("X8");
-                    PtARDS.Text = "6" + Addy1Only + Z0 + nLine + "B" + Addy1Only + Z0;
-
-                    if (OffsetCheck < 0) //Check if offset is positive or negative
-                    {
-                        int NewOffset = OffsetCheck - 0x08000000;
-                        PtARDS.Text += nLine + DC + NewOffset.ToString("X8") + nLine + CodeType + "8000000 " + Value + nLine + D2;
-                    }
-                    else PtARDS.Text += nLine + CodeType + OffsetCheck.ToString("X7") + " " + Value + nLine + D2;
                 }
             }
-            catch (System.Exception) { }
+
+            /*SmallCheck = current value being processed, 
+             *Smallest = smallest value, 
+             *SmallestLineNumber = line number of smallest value
+             */
+
+            int SmallCheck = 0, Smallest = 0, SmallestLineNumber = 0;
+            string[] Addresses = PointerResults.Text.Split('\n');
+
+            for (int i = 0; i < Addresses.Count(); i++)
+            {
+                if (Addresses[i].Trim() != "")
+                {
+                    string ValueOnly = Addresses[i].Substring(Addresses[i].IndexOf(":") + 18, 8);
+                    SmallCheck = int.Parse(ValueOnly, NumberStyles.AllowHexSpecifier);
+
+                    if (Smallest == 0 || SmallCheck < Smallest)
+                    {
+                        Smallest = SmallCheck;
+                        SmallestLineNumber = i;
+                    }
+                }
+
+                string Addy1Only = Addresses[SmallestLineNumber].Substring(3, 8);
+                string OffsetOnly = Addresses[SmallestLineNumber].Substring(Addresses[SmallestLineNumber].IndexOf(":") + 18, 8);
+
+                int CodeType = 0;
+                int OffsetCheck = int.Parse(OffsetOnly, NumberStyles.AllowHexSpecifier);
+                int ValueCheck = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
+
+                //We need the proper code type...
+                if (ValueCheck >= 0 && ValueCheck <= 255)
+                    CodeType = 2;
+                else if (ValueCheck > 255 && ValueCheck <= 65535)
+                    CodeType = 1;
+                else
+                    CodeType = 0;
+
+                CodeType.ToString();
+                string Value = ValueCheck.ToString("X8");
+                PtARDS.Text = "6" + Addy1Only + Z0 + nLine + "B" + Addy1Only + Z0;
+
+                if (OffsetCheck < 0) //Check if offset is positive or negative
+                {
+                    int NewOffset = OffsetCheck - 0x08000000;
+                    PtARDS.Text += nLine + DC + NewOffset.ToString("X8") + nLine + CodeType + "8000000 " + Value + nLine + D2;
+                }
+                else PtARDS.Text += nLine + CodeType + OffsetCheck.ToString("X7") + " " + Value + nLine + D2;
+            }
         }
         #endregion
 
         #region CodePorter
         private void CodePort_Click(object sender, RoutedEventArgs e)
         {
-            try
+            string Ported = "";
+            CodeOutput.Text = "";
+            StringBuilder cb = new StringBuilder();
+
+            foreach (string line in CodeInput.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
             {
-                string Ported = "";
-                CodeOutput.Text = "";
-                StringBuilder cb = new StringBuilder();
-
-                foreach (string line in CodeInput.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
+                if (Valid_Code(line, @"[0-F]{8}\s[0-F]{8}") &&
+                    !Valid_Code(line, @"[CD][0-2C4-5]0{6}\s[0-F]{8}|[3-A]4[0-F]{6}\s[0-F]{8}|927[0-F]{5}\s[0-F]{8}"))
                 {
-                    if (Valid_Code(line, @"[0-F]{8}\s[0-F]{8}") && 
-                        !Valid_Code(line, @"[CD][0-2C4-5]0{6}\s[0-F]{8}|[3-A]4[0-F]{6}\s[0-F]{8}|927[0-F]{5}\s[0-F]{8}"))
-                    {
-                        string AddyOnly = line.Substring(0, 8);
-                        string ValyOnly = line.Substring(9, 8);
-                        int AddyConvert = int.Parse(AddyOnly, NumberStyles.AllowHexSpecifier);
-                        int ValyConvert = int.Parse(ValyOnly, NumberStyles.AllowHexSpecifier);
-                        int OffyConvert = int.Parse(CodeOffset.Text, NumberStyles.AllowHexSpecifier);
+                    string AddyOnly = line.Substring(0, 8);
+                    string ValyOnly = line.Substring(9, 8);
+                    int AddyConvert = int.Parse(AddyOnly, NumberStyles.AllowHexSpecifier);
+                    int ValyConvert = int.Parse(ValyOnly, NumberStyles.AllowHexSpecifier);
+                    int OffyConvert = int.Parse(CodeOffset.Text, NumberStyles.AllowHexSpecifier);
 
-                        if (Valid_Code(line, @"D[36-B]0{6}\s[0-F]{8}")) //Dx Lines
-                        {
-                            Ported = CodeAdd.IsChecked == true ? (ValyConvert + OffyConvert).ToString("X8") : 
-                                (ValyConvert - OffyConvert).ToString("X8");
-                            cb.Append(AddyOnly.ToUpper() + " " + Ported.ToUpper() + nLine);
-                        }
-                        else //non-Dx lines
-                        {
-                            Ported = CodeAdd.IsChecked == true ? (AddyConvert + OffyConvert).ToString("X8") : 
-                                (AddyConvert - OffyConvert).ToString("X8");
-                            cb.Append(Ported.ToUpper() + " " + ValyOnly.ToUpper() + nLine);
-                        }
+                    if (Valid_Code(line, @"D[36-B]0{6}\s[0-F]{8}")) //Dx Lines
+                    {
+                        Ported = CodeAdd.IsChecked == true ? (ValyConvert + OffyConvert).ToString("X8") :
+                            (ValyConvert - OffyConvert).ToString("X8");
+                        cb.Append(AddyOnly.ToUpper() + " " + Ported.ToUpper() + nLine);
                     }
-                    else cb.Append(line + nLine); //everything else
+                    else //non-Dx lines
+                    {
+                        Ported = CodeAdd.IsChecked == true ? (AddyConvert + OffyConvert).ToString("X8") :
+                            (AddyConvert - OffyConvert).ToString("X8");
+                        cb.Append(Ported.ToUpper() + " " + ValyOnly.ToUpper() + nLine);
+                    }
                 }
-                CodeOutput.Text = cb.ToString();
+                else cb.Append(line + nLine); //everything else
             }
-            catch (System.Exception) { }
+            CodeOutput.Text = cb.ToString();
         }
 
         private void CodeCopy_Click(object sender, RoutedEventArgs e)
@@ -440,36 +432,32 @@ namespace NDS_Toolkit
         #region PatchCodeBuilder
         private void PatchBuild_Click(object sender, RoutedEventArgs e)
         {
-            try
+            PatchOutput.Text = "";
+            PatchInput.Text = PatchInput.Text.Trim();
+            StringBuilder pb = new StringBuilder();
+            String[] PatchCode = PatchInput.Text.Split(new String[] { Environment.NewLine }, StringSplitOptions.None);
+
+            int CodeOffset = PatchInput.LineCount; //get the number of lines
+            int CodeCheck = CodeOffset;
+            CodeOffset *= 4; //multiply by 4 to get the offset
+
+            string CodeAddress = PatchCode[0].Substring(1, 8);
+            pb.Append("E" + CodeAddress + CodeOffset.ToString("X8") + nLine);
+
+            for (int y = 0; y < PatchCode.Length; y++)
             {
-                PatchOutput.Text = "";
-                PatchInput.Text = PatchInput.Text.Trim();
-                StringBuilder pb = new StringBuilder();
-                String[] PatchCode = PatchInput.Text.Split(new String[] { Environment.NewLine }, StringSplitOptions.None);
+                string CodeValues = PatchCode[y].Substring(9, 8);
 
-                int CodeOffset = PatchInput.LineCount; //get the number of lines
-                int CodeCheck = CodeOffset;
-                CodeOffset *= 4; //multiply by 4 to get the offset
-
-                string CodeAddress = PatchCode[0].Substring(1, 8); 
-                pb.Append("E" + CodeAddress + CodeOffset.ToString("X8") + nLine); 
-                
-                for (int y = 0; y < PatchCode.Length; y++)
-                {
-                    string CodeValues = PatchCode[y].Substring(9, 8);
-
-                    if (y % 2 == 0) 
-                        pb.Append(CodeValues + " ");
-                    else 
-                        pb.Append(CodeValues + nLine); 
-                }
-
-                if (CodeCheck % 2 != 0) 
-                    pb.Append("00000000"); 
-
-                PatchOutput.Text = pb.ToString(); 
+                if (y % 2 == 0)
+                    pb.Append(CodeValues + " ");
+                else
+                    pb.Append(CodeValues + nLine);
             }
-            catch (System.Exception) { }
+
+            if (CodeCheck % 2 != 0)
+                pb.Append("00000000");
+
+            PatchOutput.Text = pb.ToString();
         }
 
         private void PatchPaste_Click(object sender, RoutedEventArgs e)
@@ -492,67 +480,63 @@ namespace NDS_Toolkit
         #region LoopCodeGenerator
         private void LoopGen_Click(object sender, RoutedEventArgs e)
         {
-            try
+            bool run = true;
+            string check = "";
+
+            string TempCount = Convert.ToInt32(LoopCount.Text).ToString("X8");
+            int HalfOffset = int.Parse(LoopOffset.Text, NumberStyles.AllowHexSpecifier);
+            string FullOffset = HalfOffset.ToString("X8");
+
+            //get the correct block offset by subtracting 1 and convert it to hex
+            int nBlock = int.Parse(TempCount, NumberStyles.AllowHexSpecifier); nBlock -= 1;
+            string ConvCount = nBlock.ToString("X8");
+
+            //check offset
+            int TempOffset = int.Parse(LoopOffset.Text, NumberStyles.AllowHexSpecifier);
+
+            if (TempOffset == 1) check = D8;
+            else if (TempOffset == 2) check = D7;
+            else if (TempOffset == 4) check = D6;
+            else run = false;
+
+            //Did the user enter a full code?
+            if (LoopBase.Text.Length != 17)
             {
-                bool run = true;
-                string check = "";
+                LoopOutput.Text = "";
+                MessageBox.Show(this, "Please enter a full code (XXXXXXXX YYYYYYYY).",
+                    "Base Code Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else if (LoopBase.Text.Length == 17 && run)
+            {
+                string BaseAddy = LoopBase.Text.Substring(0, 8); //grab the address
+                string BaseValy = LoopBase.Text.Substring(9, 8); //grab the value
 
-                string TempCount = Convert.ToInt32(LoopCount.Text).ToString("X8");
-                int HalfOffset = int.Parse(LoopOffset.Text, NumberStyles.AllowHexSpecifier);
-                string FullOffset = HalfOffset.ToString("X8"); 
+                if (LoopBase.Text[0] == '0')
+                {
+                    LoopOutput.Text = D5 + BaseValy + nLine + C0 + ConvCount + nLine + check + BaseAddy + nLine;
 
-                //get the correct block offset by subtracting 1 and convert it to hex
-                int nBlock = int.Parse(TempCount, NumberStyles.AllowHexSpecifier); nBlock -= 1;
-                string ConvCount = nBlock.ToString("X8");
-
-                //check offset
-                int TempOffset = int.Parse(LoopOffset.Text, NumberStyles.AllowHexSpecifier);
-
-                if (TempOffset == 1) check = D8;
-                else if (TempOffset == 2) check = D7;
-                else if (TempOffset == 4) check = D6;
-                else run = false;
-
-                //Did the user enter a full code?
-                if (LoopBase.Text.Length != 17)
+                    if (LoopInc.Text != "") //if there's text in the increment textbox, add the value increment.
+                    {
+                        int HalfInc = int.Parse(LoopInc.Text, NumberStyles.AllowHexSpecifier);
+                        string FullInc = HalfInc.ToString("X8");
+                        LoopOutput.Text += D4 + FullInc + nLine + D2;
+                    }
+                    else LoopOutput.Text += D2; //else, don't add the value increment.
+                }
+                else
                 {
                     LoopOutput.Text = "";
-                    MessageBox.Show(this, "Please enter a full code (XXXXXXXX YYYYYYYY).",
-                        "Base Code Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                else if (LoopBase.Text.Length == 17 && run)
-                {
-                    string BaseAddy = LoopBase.Text.Substring(0, 8); //grab the address
-                    string BaseValy = LoopBase.Text.Substring(9, 8); //grab the value
-
-                    if (LoopBase.Text[0] == '0')
-                    {
-                        LoopOutput.Text = D5 + BaseValy + nLine + C0 + ConvCount + nLine + check + BaseAddy + nLine;
-
-                        if (LoopInc.Text != "") //if there's text in the increment textbox, add the value increment.
-                        {
-                            int HalfInc = int.Parse(LoopInc.Text, NumberStyles.AllowHexSpecifier);
-                            string FullInc = HalfInc.ToString("X8"); 
-                            LoopOutput.Text += D4 + FullInc + nLine + D2;
-                        }
-                        else LoopOutput.Text += D2; //else, don't add the value increment.
-                    }
-                    else
-                    {
-                        LoopOutput.Text = "";
-                        MessageBox.Show(this, "Please check to see if your base code starts with a '0' and if you've entered an offset increment of 1, 2, or 4.",
-                            "Value Increment Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
-                else if (LoopBase.Text.Length == 17 && !run)
-                {
-                    if (LoopBase.Text[0] >= '0' && LoopBase.Text[0] < '3')
-                        LoopOutput.Text = C0 + ConvCount + nLine + LoopBase.Text + nLine + DC + FullOffset + nLine + D2;
-                    else MessageBox.Show(this, "Invalid Data! Please start your code off with a 0, 1, or 2.", "Data Input Error",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(this, "Please check to see if your base code starts with a '0' and if you've entered an offset increment of 1, 2, or 4.",
+                        "Value Increment Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            catch (System.Exception) { }
+            else if (LoopBase.Text.Length == 17 && !run)
+            {
+                if (LoopBase.Text[0] >= '0' && LoopBase.Text[0] < '3')
+                    LoopOutput.Text = C0 + ConvCount + nLine + LoopBase.Text + nLine + DC + FullOffset + nLine + D2;
+                else MessageBox.Show(this, "Invalid Data! Please start your code off with a 0, 1, or 2.", "Data Input Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void LoopCopy_Click(object sender, RoutedEventArgs e)
