@@ -1,7 +1,7 @@
 ﻿<Window x:Class="NDS_Toolkit.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="NDS Toolkit" WindowStartupLocation="CenterScreen" WindowState="Normal" ResizeMode="CanMinimize" Icon="/NDS%20Toolkit;component/programico.ico" Margin="0" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Foreground="LightGray" Loaded="Window_Loaded" d:DesignHeight="477" d:DesignWidth="593" SizeToContent="WidthAndHeight">
+        Title="NDS Toolkit" WindowStartupLocation="CenterScreen" WindowState="Normal" ResizeMode="CanMinimize" Icon="/NDS%20Toolkit;component/programico.ico" Margin="0" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Foreground="LightGray" Loaded="Window_Loaded" d:DesignHeight="490" d:DesignWidth="614" SizeToContent="WidthAndHeight">
     <Window.Resources>
         <ControlTemplate x:Key="GlassButton" TargetType="{x:Type Button}">
             <ControlTemplate.Resources>
@@ -290,7 +290,7 @@
                 <Grid HorizontalAlignment="Stretch" Name="grid4" VerticalAlignment="Stretch">
                     <GroupBox Header="Loop Code Generator" HorizontalAlignment="Left" Margin="2,0,0,0" Name="groupBox3" Width="238" Foreground="LightGray" FontWeight="Bold" Height="395" VerticalAlignment="Top">
                         <Grid Name="loopGrid">
-                            <TextBox AcceptsReturn="True" BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" FontWeight="Normal" Height="187" HorizontalAlignment="Left" IsReadOnly="True" Margin="2,153,0,0" Name="LoopOutput" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="224">
+                            <TextBox AcceptsReturn="True" BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" FontWeight="Normal" Height="190" HorizontalAlignment="Left" IsReadOnly="True" Margin="2,153,0,0" Name="LoopOutput" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="224">
                                 <TextBox.Background>
                                     <LinearGradientBrush>
                                         <GradientStop Color="LightGray" Offset="0" />
@@ -302,9 +302,9 @@
                             <Label Content="Loop Count:" Height="28" HorizontalAlignment="Left" Margin="2,30,0,0" Name="label17" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
                             <Label Content="Offset Increment:" Height="28" HorizontalAlignment="Left" Margin="2,57,0,0" Name="label18" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
                             <Label Content="Value Increment:" Height="28" HorizontalAlignment="Left" Margin="2,84,0,0" Name="label19" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
-                            <Button BorderBrush="DarkGray" Content="Generate" FontWeight="Normal" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="2,344,0,0" Name="LoopGen" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="65" Click="LoopGen_Click" />
-                            <Button BorderBrush="DarkGray" Content="Copy" FontWeight="Normal" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="81,344,0,0" Name="LoopCopy" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="65" Click="LoopCopy_Click" />
-                            <Button BorderBrush="DarkGray" Content="Clear" FontWeight="Normal" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="160,344,0,0" Name="LoopClear" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="65" Click="LoopClear_Click" />
+                            <Button BorderBrush="DarkGray" Content="Generate" FontWeight="Normal" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="2,347,0,0" Name="LoopGen" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="65" Click="LoopGen_Click" />
+                            <Button BorderBrush="DarkGray" Content="Copy" FontWeight="Normal" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="81,347,0,0" Name="LoopCopy" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="65" Click="LoopCopy_Click" />
+                            <Button BorderBrush="DarkGray" Content="Clear" FontWeight="Normal" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="160,347,0,0" Name="LoopClear" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="65" Click="LoopClear_Click" />
                             <Label Content="Code Output:" Height="28" HorizontalAlignment="Left" Margin="2,127,0,0" Name="label20" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
                             <TextBox BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" FontWeight="Normal" Height="21" Margin="101,7,0,0" MaxLength="17" Name="LoopBase" VerticalAlignment="Top" KeyDown="HexOnly_KeyDown" TextChanged="TextBox_TextChanged">
                                 <TextBox.Background>
@@ -342,7 +342,7 @@
                     </GroupBox>
                     <GroupBox Header="Patch Code Builder" Height="395" HorizontalAlignment="Left" Margin="244,0,0,0" Name="groupBox4" VerticalAlignment="Top" Width="335" Foreground="LightGray" FontWeight="Bold">
                         <Grid>
-                            <TextBox AcceptsReturn="True" BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" Height="315" HorizontalAlignment="Left" Margin="2,25,0,0" Name="PatchInput" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="157" FontWeight="Normal" KeyDown="HexOnly_KeyDown">
+                            <TextBox AcceptsReturn="True" BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" Height="318" HorizontalAlignment="Left" Margin="2,25,0,0" Name="PatchInput" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="157" FontWeight="Normal" KeyDown="HexOnly_KeyDown">
                                 <TextBox.Background>
                                     <LinearGradientBrush>
                                         <GradientStop Color="LightGray" Offset="0" />
@@ -350,7 +350,7 @@
                                     </LinearGradientBrush>
                                 </TextBox.Background>
                             </TextBox>
-                            <TextBox AcceptsReturn="True" BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" Height="315" HorizontalAlignment="Left" Margin="164,25,0,0" Name="PatchOutput" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="157" FontWeight="Normal" IsReadOnly="True">
+                            <TextBox AcceptsReturn="True" BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" Height="318" HorizontalAlignment="Left" Margin="164,25,0,0" Name="PatchOutput" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="157" FontWeight="Normal" IsReadOnly="True">
                                 <TextBox.Background>
                                     <LinearGradientBrush>
                                         <GradientStop Color="LightGray" Offset="0" />
@@ -360,10 +360,10 @@
                             </TextBox>
                             <Label Content="Code Input:" Height="28" HorizontalAlignment="Left" Margin="2,0,0,0" Name="label14" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
                             <Label Content="Code Output:" FontWeight="Normal" Foreground="LightGray" Height="28" HorizontalAlignment="Left" Margin="164,0,0,0" Name="label15" VerticalAlignment="Top" />
-                            <Button BorderBrush="DarkGray" Content="Paste" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="2,344,0,0" Name="PatchPaste" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="75" FontWeight="Normal" Click="PatchPaste_Click" />
-                            <Button BorderBrush="DarkGray" Content="Build" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="84,344,0,0" Name="PatchBuild" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="75" FontWeight="Normal" Click="PatchBuild_Click" />
-                            <Button BorderBrush="DarkGray" Content="Copy" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="164,344,0,0" Name="PatchCopy" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="75" FontWeight="Normal" Click="PatchCopy_Click" />
-                            <Button BorderBrush="DarkGray" Content="Clear" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="246,344,0,0" Name="PatchClear" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="75" FontWeight="Normal" Click="PatchClear_Click" />
+                            <Button BorderBrush="DarkGray" Content="Paste" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="2,347,0,0" Name="PatchPaste" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="75" FontWeight="Normal" Click="PatchPaste_Click" />
+                            <Button BorderBrush="DarkGray" Content="Build" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="84,347,0,0" Name="PatchBuild" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="75" FontWeight="Normal" Click="PatchBuild_Click" />
+                            <Button BorderBrush="DarkGray" Content="Copy" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="164,347,0,0" Name="PatchCopy" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="75" FontWeight="Normal" Click="PatchCopy_Click" />
+                            <Button BorderBrush="DarkGray" Content="Clear" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="246,347,0,0" Name="PatchClear" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="75" FontWeight="Normal" Click="PatchClear_Click" />
                         </Grid>
                     </GroupBox>
                 </Grid>
