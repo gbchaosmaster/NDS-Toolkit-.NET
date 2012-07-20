@@ -288,9 +288,9 @@
             </TabItem>
             <TabItem Header="Code Compressor">
                 <Grid HorizontalAlignment="Stretch" Name="grid4" VerticalAlignment="Stretch">
-                    <GroupBox Header="Loop Code Generator" HorizontalAlignment="Left" Margin="2,0,0,0" Name="groupBox3" Width="238" Foreground="LightGray" FontWeight="Bold" Height="395" VerticalAlignment="Top">
+                    <GroupBox Header="Loop Code Generator" HorizontalAlignment="Left" Margin="2,0,0,0" Name="groupBox3" Width="236" Foreground="LightGray" FontWeight="Bold" Height="395" VerticalAlignment="Top">
                         <Grid Name="loopGrid">
-                            <TextBox AcceptsReturn="True" BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" FontWeight="Normal" Height="190" HorizontalAlignment="Left" IsReadOnly="True" Margin="2,153,0,0" Name="LoopOutput" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="224">
+                            <TextBox AcceptsReturn="True" BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" FontWeight="Normal" Height="190" HorizontalAlignment="Left" IsReadOnly="True" Margin="2,153,0,0" Name="LoopOutput" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="220">
                                 <TextBox.Background>
                                     <LinearGradientBrush>
                                         <GradientStop Color="LightGray" Offset="0" />
@@ -300,13 +300,13 @@
                             </TextBox>
                             <Label Content="Base Code:" Height="28" HorizontalAlignment="Left" Margin="2,0,0,0" Name="label16" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
                             <Label Content="Loop Count:" Height="28" HorizontalAlignment="Left" Margin="2,30,0,0" Name="label17" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
-                            <Label Content="Offset Increment:" Height="28" HorizontalAlignment="Left" Margin="2,57,0,0" Name="label18" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
-                            <Label Content="Value Increment:" Height="28" HorizontalAlignment="Left" Margin="2,84,0,0" Name="label19" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
+                            <Label Content="Offset Inc:" Height="28" HorizontalAlignment="Left" Margin="2,57,0,0" Name="label18" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
+                            <Label Content="Value Inc:" Height="28" HorizontalAlignment="Left" Margin="2,84,0,0" Name="label19" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
                             <Button BorderBrush="DarkGray" Content="Generate" FontWeight="Normal" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="2,347,0,0" Name="LoopGen" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="65" Click="LoopGen_Click" />
-                            <Button BorderBrush="DarkGray" Content="Copy" FontWeight="Normal" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="81,347,0,0" Name="LoopCopy" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="65" Click="LoopCopy_Click" />
-                            <Button BorderBrush="DarkGray" Content="Clear" FontWeight="Normal" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="160,347,0,0" Name="LoopClear" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="65" Click="LoopClear_Click" />
+                            <Button BorderBrush="DarkGray" Content="Copy" FontWeight="Normal" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="80,347,0,0" Name="LoopCopy" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="65" Click="LoopCopy_Click" />
+                            <Button BorderBrush="DarkGray" Content="Clear" FontWeight="Normal" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="157,347,0,0" Name="LoopClear" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="65" Click="LoopClear_Click" />
                             <Label Content="Code Output:" Height="28" HorizontalAlignment="Left" Margin="2,127,0,0" Name="label20" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
-                            <TextBox BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" FontWeight="Normal" Height="21" Margin="101,7,0,0" MaxLength="17" Name="LoopBase" VerticalAlignment="Top" KeyDown="HexOnly_KeyDown" TextChanged="TextBox_TextChanged">
+                            <TextBox BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" FontWeight="Normal" Height="21" Margin="85,7,2,0" MaxLength="17" Name="LoopBase" VerticalAlignment="Top" KeyDown="HexOnly_KeyDown" TextChanged="TextBox_TextChanged">
                                 <TextBox.Background>
                                     <LinearGradientBrush>
                                         <GradientStop Color="LightGray" Offset="0" />
@@ -314,7 +314,7 @@
                                     </LinearGradientBrush>
                                 </TextBox.Background>
                             </TextBox>
-                            <TextBox BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" FontWeight="Normal" Height="21" HorizontalAlignment="Left" Margin="101,34,0,0" MaxLength="9" Name="LoopCount" VerticalAlignment="Top" Width="125" KeyDown="DecOnly_KeyDown">
+                            <TextBox BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" FontWeight="Normal" Height="21" HorizontalAlignment="Left" Margin="85,34,0,0" MaxLength="9" Name="LoopCount" VerticalAlignment="Top" Width="137" KeyDown="DecOnly_KeyDown">
                                 <TextBox.Background>
                                     <LinearGradientBrush>
                                         <GradientStop Color="LightGray" Offset="0" />
@@ -322,7 +322,7 @@
                                     </LinearGradientBrush>
                                 </TextBox.Background>
                             </TextBox>
-                            <TextBox BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" FontWeight="Normal" Height="21" HorizontalAlignment="Left" Margin="101,61,0,0" MaxLength="8" Name="LoopOffset" VerticalAlignment="Top" Width="125" KeyDown="HexOnly_KeyDown">
+                            <TextBox BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" FontWeight="Normal" Height="21" HorizontalAlignment="Left" Margin="85,61,0,0" MaxLength="8" Name="LoopOffset" VerticalAlignment="Top" Width="137" KeyDown="HexOnly_KeyDown">
                                 <TextBox.Background>
                                     <LinearGradientBrush>
                                         <GradientStop Color="LightGray" Offset="0" />
@@ -330,7 +330,7 @@
                                     </LinearGradientBrush>
                                 </TextBox.Background>
                             </TextBox>
-                            <TextBox BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" FontWeight="Normal" Height="21" HorizontalAlignment="Left" Margin="101,88,0,0" MaxLength="8" Name="LoopInc" VerticalAlignment="Top" Width="125" KeyDown="HexOnly_KeyDown">
+                            <TextBox BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" FontWeight="Normal" Height="21" HorizontalAlignment="Left" Margin="85,88,0,0" MaxLength="8" Name="LoopInc" VerticalAlignment="Top" Width="137" KeyDown="HexOnly_KeyDown">
                                 <TextBox.Background>
                                     <LinearGradientBrush>
                                         <GradientStop Color="LightGray" Offset="0" />
@@ -340,7 +340,7 @@
                             </TextBox>
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="Patch Code Builder" Height="395" HorizontalAlignment="Left" Margin="244,0,0,0" Name="groupBox4" VerticalAlignment="Top" Width="335" Foreground="LightGray" FontWeight="Bold">
+                    <GroupBox Header="Patch Code Builder" Height="395" HorizontalAlignment="Left" Margin="242,0,0,0" Name="groupBox4" VerticalAlignment="Top" Width="335" Foreground="LightGray" FontWeight="Bold">
                         <Grid>
                             <TextBox AcceptsReturn="True" BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" Height="318" HorizontalAlignment="Left" Margin="2,25,0,0" Name="PatchInput" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="157" FontWeight="Normal" KeyDown="HexOnly_KeyDown">
                                 <TextBox.Background>
