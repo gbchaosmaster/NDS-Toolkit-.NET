@@ -255,24 +255,51 @@ namespace NDS_Toolkit
         {
             //Check if both files have been opened
             if (Length1 == 0 || Length2 == 0 || Length1 != Length2)
+            {
                 MessageBox.Show(this, "Please upload two files of the same size.");
+                return;
+            }
 
             //compare the length of the files (in bytes/size)
             if (openFileOne.OpenFile().Length != openFileTwo.OpenFile().Length)
+            {
                 MessageBox.Show(this, "The files you uploaded are different sizes!");
+                return;
+            }
 
             //Check if the addresses are the same
             if (AddressOne.Text == AddressTwo.Text)
+            {
                 MessageBox.Show(this, "Please input two different addresses.");
+                return;
+            }
 
             //Check if the user entered an address with less than 7 chars
             if (AddressOne.Text.Length < 7 || AddressTwo.Text.Length < 7)
+            {
                 MessageBox.Show(this, "Please check to see if both addresses are 7-8 characters long.");
+                return;
+            }
 
             PtARDS.Text = "";
             PointerResults.Text = "";
-            StringBuilder ptrCode = new StringBuilder(); 
+
+            StringBuilder ptrCode = new StringBuilder();
             StringBuilder ptrOutput = new StringBuilder();
+
+            int HexCheck = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
+            int MaxOffsetTest = int.Parse(MaxOffset.Text, NumberStyles.HexNumber);
+
+            //get the code type based on the Hex Value input
+            int CodeType = HexCheck >= 0 && HexCheck <= 255
+                           ? 2
+                           : HexCheck > 255 && HexCheck <= 65535
+                             ? 1
+                             : 0;
+
+            int DesiredOffset = Positive.IsChecked == true
+                                ? Math.Abs(MaxOffsetTest)
+                                : -Math.Abs(MaxOffsetTest);
 
             //read the contents of the files
             BinaryReader File1 = new BinaryReader(openFileOne.OpenFile());
@@ -282,49 +309,37 @@ namespace NDS_Toolkit
             int Addy1 = int.Parse(AddressOne.Text, NumberStyles.HexNumber);
             int Addy2 = int.Parse(AddressTwo.Text, NumberStyles.HexNumber);
 
-            int MaxPtrOffset = int.Parse(MaxOffset.Text, NumberStyles.HexNumber);
-            int DesiredOffset = Positive.IsChecked == true ? 
-                Math.Abs(MaxPtrOffset) : -Math.Abs(MaxPtrOffset);
-            int HexCheck = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
-
-            //we need the proper code type...
-            int CodeType = HexCheck >= 0 && HexCheck <= 0xFF ? 2
-                : HexCheck > 0xFF && HexCheck <= 0xFFFF ? 1 : 0;
-
-            //loop through the file (32-bit aligned)
-            for (int x = 0; x < Length1; x += 4)
+            //loop through the file, from 0 to file size in bytes (32-bit aligned)
+            for (int i = 0; i < Length1; i += sizeof(int))
             {
                 int Offset1 = Addy1 - File1.ReadInt32();
                 int Offset2 = Addy2 - File2.ReadInt32();
 
                 /*Based on the checkbox that was checked:
-                 *when positive is checked, it'll check to see if the offset is than or equal to 
-                 *the positive max offset the user entered and it will then check if the offset 
-                 *is actually positive (greater than 0). 
+                 *when positive is checked, it'll check to see if the offset is than or equal to
+                 *the positive max offset the user entered and it will then check if the offset
+                 *is actually positive (greater than 0).
                  *
                  *when negative is checked, it'll check to see if the offset is greater than or
-                 *equal to the negative max offset the user entered and it will then check if the 
+                 *equal to the negative max offset the user entered and it will then check if the
                  *offset is actually negative (less than 0)
                  */
 
-                if ((Offset1 == Offset2) && (Offset1 <= DesiredOffset && Offset1 > 0) || 
-                    (Offset1 >= DesiredOffset && Offset1 < 0))
-                {
-                    ptrOutput.Append(String.Format("0x{0:X8} : 0x{1:X8} :: 0x{2:X8}\n", 
-                        x + 0x02000000, Addy1 - Offset1, Offset1));
-                }
+                if ((Offset1 == Offset2) &&
+                    ((Offset1 <= DesiredOffset && Offset1 > 0) ||
+                     (Offset1 >= DesiredOffset && Offset1 < 0)))
+                    ptrOutput.Append(String.Format("0x{0:X8} : 0x{1:X8} :: 0x{2:X8}\n",
+                                                   i + 0x02000000, Addy1 - Offset1, Offset1));
             }
 
-            PointerResults.Text = ptrOutput.ToString();
+            PointerResults.Text = ptrOutput.ToString().Trim();
 
-            /*SmallCheck = current value being processed, 
-             *Smallest = smallest value, 
-             *PtrAddy = smallest address 1
+            /*Smallest = smallest value, 
+             *SmallestAddy1 = smallest address 1
              */
 
             int Smallest = 0;
-            int SmallCheck = 0; 
-            string PtrAddy = "";
+            string SmallestAddy1 = "";
 
             foreach (string Address in PointerResults.Text.Split('\n'))
             {
@@ -332,29 +347,42 @@ namespace NDS_Toolkit
                 if (Address.Trim() == "")
                     continue;
 
-                string ValueOnly = Address.Substring(Address.IndexOf(":") + 18, 8);
-                SmallCheck = int.Parse(ValueOnly, NumberStyles.AllowHexSpecifier);
+                //parse the offset value
+                int SmallCheck = int.Parse(Address.Substring(29, 8),
+                                           NumberStyles.AllowHexSpecifier);
 
+                //if the result is the best so far, save some data about it
                 if (Smallest == 0 || SmallCheck < Smallest)
                 {
                     Smallest = SmallCheck;
-                    PtrAddy = Address.Substring(3, 8);
+                    SmallestAddy1 = Address.Substring(3, 7);
                 }
             }
 
-            string Value = HexCheck.ToString("X8");
-            ptrCode.Append("6" + PtrAddy + Z0 + nLine + "B" + PtrAddy + Z0);
+            ptrCode.Append(String.Format("6{0} 00000000\nB{0} 00000000\n",
+                                         SmallestAddy1));
+            ptrCode.Append(
+                Smallest < 0
+                //negative offset
+                ? String.Format(
+                    "DC000000 {0:X8}\n" +
+                    "{1:X}8000000 {2:X8}\n" +
+                    "D2000000 00000000",
+                    Smallest - 0x08000000,
+                    CodeType,
+                    HexCheck
+                 )
+                 : String.Format(
+                     "{0:X}{1:X7} {2:X8}\n" +
+                     "D2000000 00000000",
+                     CodeType,
+                     Smallest,
+                     HexCheck
+                 )
+            );
 
-            if (Smallest < 0) //Check if offset is positive or negative
-            {
-                int NewOffset = Smallest - 0x08000000;
-                ptrCode.Append(nLine + DC + NewOffset.ToString("X8") + nLine + CodeType + "8000000 " + Value + nLine + D2);
-            }
-            else ptrCode.Append(nLine + CodeType + Smallest.ToString("X7") + " " + Value + nLine + D2);
-
-            PtARDS.Text = ptrCode.ToString(); 
-
-        }      
+            PtARDS.Text = ptrCode.ToString();
+        }
         #endregion
 
         #region CodePorter
