@@ -109,7 +109,7 @@ namespace NDS_Toolkit
                 nLine + "rimsky82" + nLine + "elixirdream" + nLine + "dragonboy269" + nLine + "gbchaosmaster";
 
             labelProductName.Text = "Product: NDS Toolkit";
-            labelVersion.Text = "Version: 1.0";
+            labelVersion.Text = "Version: 1.1";
             labelCopyright.Text = "Author: Demonic722";
             labelCompanyName.Text = "Website(s): Syntechx.com, GameHacking.org";
         }

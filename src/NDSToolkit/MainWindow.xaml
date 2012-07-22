@@ -168,8 +168,8 @@
                                     </LinearGradientBrush>
                                 </TextBox.Background>
                             </TextBox>
-                            <Button Content="Open" Height="23" HorizontalAlignment="Left" Margin="477,6,0,0" Name="FileOne" VerticalAlignment="Top" Width="75" Click="FileOne_Click" FontWeight="Normal" Foreground="#FFFFFFFF" Template="{DynamicResource GlassButton}" BorderBrush="DarkGray" />
-                            <Button Content="Open" Height="23" HorizontalAlignment="Left" Margin="477,35,0,0" Name="FileTwo" VerticalAlignment="Top" Width="75" Click="FileTwo_Click" FontWeight="Normal" Foreground="#FFFFFFFF" Template="{DynamicResource GlassButton}" BorderBrush="DarkGray" />
+                            <Button Content="Open" Height="23" HorizontalAlignment="Left" Margin="477,6,0,0" Name="FileOne" VerticalAlignment="Top" Width="81" Click="FileOne_Click" FontWeight="Normal" Foreground="#FFFFFFFF" Template="{DynamicResource GlassButton}" BorderBrush="DarkGray" />
+                            <Button Content="Open" Height="23" HorizontalAlignment="Left" Margin="477,35,0,0" Name="FileTwo" VerticalAlignment="Top" Width="81" Click="FileTwo_Click" FontWeight="Normal" Foreground="#FFFFFFFF" Template="{DynamicResource GlassButton}" BorderBrush="DarkGray" />
                         </Grid>
                     </GroupBox>
                     <GroupBox Header="Data Input" Height="83" HorizontalAlignment="Left" Margin="2,91,0,0" Name="DataInput" VerticalAlignment="Top" Width="290" Foreground="LightGray" FontWeight="Bold">
