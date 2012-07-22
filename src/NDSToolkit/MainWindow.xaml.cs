@@ -34,10 +34,10 @@ namespace NDS_Toolkit
 
         //Code types
         string D2 = "D2000000 00000000";
-        string DC = "DC000000 ", Z0 = "00000000";
+        string DC = "DC000000 ", C0 = "C0000000 ";
         string D4 = "D4000000 ", D5 = "D5000000 ";
         string D6 = "D6000000 ", D7 = "D7000000 ";
-        string D8 = "D8000000 ", C0 = "C0000000 ";
+        string D8 = "D8000000 "; 
 
         public MainWindow()
         {
