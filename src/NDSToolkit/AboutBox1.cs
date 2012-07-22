@@ -104,14 +104,14 @@ namespace NDS_Toolkit
         private void AboutBox1_Load(object sender, EventArgs e)
         {
             string nLine = Environment.NewLine;
-            textBoxDescription.Text = "Formerly known as NDS Hacking Kit, NDS Toolkit is the continuation of that project; It's simply " +
-                "an AIO NDS Application with many features." + nLine + nLine + "Special Thanks:" + nLine + "Abystus" + nLine + "Scythe" +
-                nLine + "rimsky82" + nLine + "elixirdream" + nLine + "dragonboy269" + nLine + "gbchaosmaster";
 
             labelProductName.Text = "Product: NDS Toolkit";
             labelVersion.Text = "Version: 1.1";
             labelCopyright.Text = "Author: Demonic722";
             labelCompanyName.Text = "Website(s): Syntechx.com, GameHacking.org";
+            textBoxDescription.Text = "Formerly known as NDS Hacking Kit, NDS Toolkit is the continuation of that project; It's simply " +
+               "an AIO NDS Application with many features." + nLine + nLine + "Special Thanks:" + nLine + "Abystus" + nLine + "Scythe" +
+               nLine + "helder" + nLine + "rimsky82" + nLine + "elixirdream" + nLine + "dragonboy269" + nLine + "gbchaosmaster";
         }
     }
 }
