@@ -174,7 +174,7 @@
                     </GroupBox>
                     <GroupBox Header="Data Input" Height="83" HorizontalAlignment="Left" Margin="2,91,0,0" Name="DataInput" VerticalAlignment="Top" Width="290" Foreground="LightGray" FontWeight="Bold">
                         <Grid>
-                            <TextBox Height="21" HorizontalAlignment="Left" Margin="6,31,0,0" Name="AddressOne" VerticalAlignment="Top" Width="73" CharacterCasing="Upper" MaxLength="8" FontFamily="Courier New" FontSize="11.5" BorderThickness="2" FontWeight="Normal" BorderBrush="DarkGray">
+                            <TextBox Height="21" HorizontalAlignment="Left" Margin="6,31,0,0" Name="AddressOne" VerticalAlignment="Top" Width="73" CharacterCasing="Upper" MaxLength="8" FontFamily="Courier New" FontSize="11.5" BorderThickness="2" FontWeight="Normal" BorderBrush="DarkGray" KeyDown="HexOnly_KeyDown">
                                 <TextBox.Background>
                                     <LinearGradientBrush>
                                         <GradientStop Color="LightGray" Offset="0" />
@@ -182,7 +182,7 @@
                                     </LinearGradientBrush>
                                 </TextBox.Background>
                             </TextBox>
-                            <TextBox Height="21" HorizontalAlignment="Left" Margin="99,31,0,0" Name="AddressTwo" VerticalAlignment="Top" Width="73" CharacterCasing="Upper" MaxLength="8" FontFamily="Courier New" FontSize="11.5" BorderThickness="2" FontWeight="Normal" BorderBrush="DarkGray">
+                            <TextBox Height="21" HorizontalAlignment="Left" Margin="99,31,0,0" Name="AddressTwo" VerticalAlignment="Top" Width="73" CharacterCasing="Upper" MaxLength="8" FontFamily="Courier New" FontSize="11.5" BorderThickness="2" FontWeight="Normal" BorderBrush="DarkGray" KeyDown="HexOnly_KeyDown">
                                 <TextBox.Background>
                                     <LinearGradientBrush>
                                         <GradientStop Color="LightGray" Offset="0" />
@@ -190,7 +190,7 @@
                                     </LinearGradientBrush>
                                 </TextBox.Background>
                             </TextBox>
-                            <TextBox Height="21" HorizontalAlignment="Right" Margin="0,31,13,0" Name="HexValue" VerticalAlignment="Top" Width="73" CharacterCasing="Upper" MaxLength="8" FontFamily="Courier New" FontSize="11.5" BorderThickness="2" FontWeight="Normal" BorderBrush="DarkGray">
+                            <TextBox Height="21" HorizontalAlignment="Right" Margin="0,31,13,0" Name="HexValue" VerticalAlignment="Top" Width="73" CharacterCasing="Upper" MaxLength="8" FontFamily="Courier New" FontSize="11.5" BorderThickness="2" FontWeight="Normal" BorderBrush="DarkGray" KeyDown="HexOnly_KeyDown">
                                 <TextBox.Background>
                                     <LinearGradientBrush>
                                         <GradientStop Color="LightGray" Offset="0" />
@@ -208,7 +208,7 @@
                             <RadioButton Content="Only Positive" Height="16" HorizontalAlignment="Left" Margin="6,6,0,0" Name="Positive" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
                             <RadioButton Content="Only Negative" Height="16" HorizontalAlignment="Left" Margin="97,6,0,0" Name="Negative" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
                             <Label Content="Max Pointer Offset:" Height="28" HorizontalAlignment="Left" Margin="0,29,0,0" Name="label4" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
-                            <TextBox Height="21" HorizontalAlignment="Right" Margin="0,31,80,0" Name="MaxOffset" VerticalAlignment="Top" Width="73" CharacterCasing="Upper" MaxLength="8" FontSize="11.5" BorderThickness="2" FontWeight="Normal" FontFamily="Courier New" BorderBrush="DarkGray">
+                            <TextBox Height="21" HorizontalAlignment="Right" Margin="0,31,80,0" Name="MaxOffset" VerticalAlignment="Top" Width="73" CharacterCasing="Upper" MaxLength="8" FontSize="11.5" BorderThickness="2" FontWeight="Normal" FontFamily="Courier New" BorderBrush="DarkGray" KeyDown="HexOnly_KeyDown">
                                 <TextBox.Background>
                                     <LinearGradientBrush>
                                         <GradientStop Color="LightGray" Offset="0" />
@@ -223,14 +223,6 @@
                             </Button>
                         </Grid>
                     </GroupBox>
-                    <TextBox Height="200" HorizontalAlignment="Left" Margin="2,196,0,0" Name="PointerResults" VerticalAlignment="Top" Width="290" AcceptsReturn="True" IsReadOnly="True" VerticalScrollBarVisibility="Visible" FontFamily="Courier New" FontSize="11.5" BorderThickness="2" BorderBrush="DarkGray">
-                        <TextBox.Background>
-                            <LinearGradientBrush>
-                                <GradientStop Color="LightGray" Offset="0" />
-                                <GradientStop Color="White" Offset="1" />
-                            </LinearGradientBrush>
-                        </TextBox.Background>
-                    </TextBox>
                     <TextBox AcceptsReturn="True" Height="200" HorizontalAlignment="Left" IsReadOnly="True" Margin="298,196,0,0" Name="PtARDS" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="275" FontFamily="Courier New" FontSize="11.5" BorderThickness="2" BorderBrush="DarkGray">
                         <TextBox.Background>
                             <LinearGradientBrush>
@@ -243,6 +235,14 @@
                     <Label Content="Pointer Code" Height="28" HorizontalAlignment="Left" Margin="391,173,0,0" Name="label6" VerticalAlignment="Top" Foreground="LightGray" />
                     <Label Content="Value At" Height="28" HorizontalAlignment="Left" Margin="112,173,0,0" Name="label7" VerticalAlignment="Top" Foreground="LightGray" />
                     <Label Content="Offset" Height="28" HorizontalAlignment="Left" Margin="215,173,0,0" Name="label8" VerticalAlignment="Top" Foreground="LightGray" />
+                    <ListBox Height="200" HorizontalAlignment="Left" Margin="2,196,0,0" Name="ptrResults" VerticalAlignment="Top" Width="290" BorderThickness="2" BorderBrush="DarkGray" FontSize="11.5" FontFamily="Courier New" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="ptrResults_SelectionChanged">
+                        <ListBox.Background>
+                            <LinearGradientBrush>
+                                <GradientStop Color="LightGray" Offset="0" />
+                                <GradientStop Color="White" Offset="1" />
+                            </LinearGradientBrush>
+                        </ListBox.Background>
+                    </ListBox>
                 </Grid>
             </TabItem>
             <TabItem Header="Code Porter">

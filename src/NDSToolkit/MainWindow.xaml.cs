@@ -44,6 +44,7 @@ namespace NDS_Toolkit
             InitializeComponent();
         }
 
+        #region Misc
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             CodeAdd.IsChecked = true; 
@@ -68,6 +69,7 @@ namespace NDS_Toolkit
             Window1 window = new Window1();
             window.Show();
         }
+        #endregion
 
         #region GlobalFunctions
         private bool Valid_Code(String Code, String Pattern)
@@ -77,11 +79,21 @@ namespace NDS_Toolkit
             else return false;
         }
 
+        private string ctFxn(int ct)
+        {
+            int hc = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
+
+            //get the code type based on the Hex Value input
+            ct = hc >= 0 && hc <= 255 ? 2 :
+                hc > 255 && hc <= 65535 ? 1 : 0;
+            return ct.ToString("X");
+        }
+
         private void HexOnly_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key >= Key.A && e.Key <= Key.F ||
                 e.Key >= Key.D0 && e.Key <= Key.D9 ||
-                e.Key >= Key.NumPad0 || e.Key <= Key.NumPad9)
+                e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9)
                 e.Handled = false;
             else e.Handled = true;
         }
@@ -89,20 +101,22 @@ namespace NDS_Toolkit
         private void DecOnly_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key >= Key.D0 && e.Key <= Key.D9 ||
-                e.Key >= Key.NumPad0 || e.Key <= Key.NumPad9)
+                e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9)
                 e.Handled = false;
             else e.Handled = true;
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (LoopBase.Text.Length == 8) //Loop Code Generator 
+            //Loop Code Generator 
+            if (LoopBase.Text.Length == 8) 
             {
                 LoopBase.Text += " ";
                 LoopBase.SelectionStart = 10;
             }
 
-            if (FileOneRead.Text != "" && FileTwoRead.Text != "") //Helder's requested Pointer feature
+            //Helder's requested Pointer feature
+            if (!String.IsNullOrEmpty(FileOneRead.Text) && !String.IsNullOrEmpty(FileTwoRead.Text))
             {
                 string ReadToAddy1 = FileOneRead.Text.Substring(FileOneRead.Text.IndexOf(".bin") - 8, 8);
                 string ReadToAddy2 = FileTwoRead.Text.Substring(FileTwoRead.Text.IndexOf(".bin") - 8, 8);
@@ -114,13 +128,13 @@ namespace NDS_Toolkit
                 }
                 else
                 {
-                    AddressOne.Text = "";
-                    AddressTwo.Text = "";
+                    AddressOne.Clear();
+                    AddressTwo.Clear();
                 }
             }
 
             //CodePorter; elixirdream's requested feature 
-            if (CodeOutput.Text != "")
+            if (!String.IsNullOrEmpty(CodeOutput.Text))
                 CodeOutput.IsReadOnly = false;
             else CodeOutput.IsReadOnly = true; 
         }
@@ -174,14 +188,14 @@ namespace NDS_Toolkit
                 ButtonOutput.Text = "94000130 " + GBAConverted + nLine + ButtonInput.Text + nLine + D2;
                 GBATst.Text = "GBA tst Value: 0x" + GBATotal.ToString("X4");
             }
-            else GBATst.Text = "";
+            else GBATst.Clear(); 
 
             if (NDS == true)
             {
                 ButtonOutput.Text = "927FFFA8 " + NDSConverted + nLine + ButtonInput.Text + nLine + D2;
                 NDSTst.Text = "NDS tst Value: 0x" + NDSTotal.ToString("X4");
             }
-            else NDSTst.Text = "";
+            else NDSTst.Clear();
 
             if (GBA == true && NDS == true)
             {
@@ -190,9 +204,9 @@ namespace NDS_Toolkit
             }
             else if (GBA == false && NDS == false)
             {
-                ButtonOutput.Text = "";
-                GBATst.Text = "";
-                NDSTst.Text = "";
+                ButtonOutput.Clear();
+                GBATst.Clear();
+                NDSTst.Clear();
             }
         }
 
@@ -203,7 +217,7 @@ namespace NDS_Toolkit
                 if (elementOne is TextBox)
                 {
                     TextBox buttonCodeIO = (TextBox)elementOne;
-                    buttonCodeIO.Text = "";
+                    buttonCodeIO.Clear();
                 }
                 if (elementOne is GroupBox)
                 {
@@ -258,50 +272,41 @@ namespace NDS_Toolkit
             //Check if both files have been opened
             if (Length1 == 0 || Length2 == 0 || Length1 != Length2)
             {
-                MessageBox.Show(this, "Please upload two files of the same size.");
+                MessageBox.Show(this, "Please upload two files of the same size.", 
+                                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             //compare the length of the files (in bytes/size)
             if (openFileOne.OpenFile().Length != openFileTwo.OpenFile().Length)
             {
-                MessageBox.Show(this, "The files you uploaded are different sizes!");
+                MessageBox.Show(this, "The files you uploaded are different sizes!",
+                                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             //Check if the addresses are the same
             if (AddressOne.Text == AddressTwo.Text)
             {
-                MessageBox.Show(this, "Please input two different addresses.");
+                MessageBox.Show(this, "Please input two different addresses.", 
+                                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             //Check if the user entered an address with less than 7 chars
             if (AddressOne.Text.Length < 7 || AddressTwo.Text.Length < 7)
             {
-                MessageBox.Show(this, "Please check to see if both addresses are 7-8 characters long.");
+                MessageBox.Show(this, "Please check to see if both addresses are 7-8 characters long.", 
+                                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            PtARDS.Text = "";
-            PointerResults.Text = "";
-
+            PtARDS.Clear();
+            ptrResults.Items.Clear();
             StringBuilder ptrCode = new StringBuilder();
-            StringBuilder ptrOutput = new StringBuilder();
-
-            int HexCheck = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
+            int hc = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
             int MaxOffsetTest = int.Parse(MaxOffset.Text, NumberStyles.HexNumber);
-
-            //get the code type based on the Hex Value input
-            int CodeType = HexCheck >= 0 && HexCheck <= 255
-                           ? 2
-                           : HexCheck > 255 && HexCheck <= 65535
-                             ? 1
-                             : 0;
-
-            int DesiredOffset = Positive.IsChecked == true
-                                ? Math.Abs(MaxOffsetTest)
-                                : -Math.Abs(MaxOffsetTest);
+            int DesiredOffset = Positive.IsChecked == true ? Math.Abs(MaxOffsetTest) : -Math.Abs(MaxOffsetTest);
 
             //read the contents of the files
             BinaryReader File1 = new BinaryReader(openFileOne.OpenFile());
@@ -312,7 +317,7 @@ namespace NDS_Toolkit
             int Addy2 = int.Parse(AddressTwo.Text, NumberStyles.HexNumber);
 
             //loop through the file, from 0 to file size in bytes (32-bit aligned)
-            for (int i = 0; i < Length1; i += sizeof(int))
+            for (int i = 0; i < Length1; i += 4)
             {
                 int Offset1 = Addy1 - File1.ReadInt32();
                 int Offset2 = Addy2 - File2.ReadInt32();
@@ -330,20 +335,18 @@ namespace NDS_Toolkit
                 if ((Offset1 == Offset2) &&
                     ((Offset1 <= DesiredOffset && Offset1 > 0) ||
                      (Offset1 >= DesiredOffset && Offset1 < 0)))
-                    ptrOutput.Append(String.Format("0x{0:X8} : 0x{1:X8} :: 0x{2:X8}\n",
+                    ptrResults.Items.Add(String.Format("0x{0:X8} : 0x{1:X8} :: 0x{2:X8}",
                                                    i + 0x02000000, Addy1 - Offset1, Offset1));
             }
-
-            PointerResults.Text = ptrOutput.ToString().Trim();
-
+  
             /*Smallest = smallest value, 
              *SmallestAddy1 = smallest address 1
              */
 
-            int Smallest = 0;
+            int ct = 0, Smallest = 0;
             string SmallestAddy1 = "";
 
-            foreach (string Address in PointerResults.Text.Split('\n'))
+            foreach (string Address in ptrResults.Items)
             {
                 //make sure we didn't grab a blank
                 if (Address.Trim() == "")
@@ -364,26 +367,63 @@ namespace NDS_Toolkit
             ptrCode.Append(String.Format("6{0} 00000000\nB{0} 00000000\n",
                                          SmallestAddy1));
             ptrCode.Append(
+                //negative?
                 Smallest < 0
-                //negative offset
                 ? String.Format(
                     "DC000000 {0:X8}\n" +
                     "{1:X}8000000 {2:X8}\n" +
                     "D2000000 00000000",
                     Smallest - 0x08000000,
-                    CodeType,
-                    HexCheck
+                    ctFxn(ct), hc
                  )
                  : String.Format(
                      "{0:X}{1:X7} {2:X8}\n" +
                      "D2000000 00000000",
-                     CodeType,
-                     Smallest,
-                     HexCheck
+                     ctFxn(ct),
+                     Smallest, hc
                  )
             );
 
             PtARDS.Text = ptrCode.ToString();
+        }
+
+        private void ptrResults_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int hc = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
+
+            if (ptrResults.SelectedIndex > -1)
+            {
+                int ct = 0;
+                StringBuilder ptrCode = new StringBuilder();
+                string ptrLine = ptrResults.SelectedItem.ToString();
+
+                //fetch the address and offset from the selected line
+                int smAddy = int.Parse(ptrLine.Substring(3, 7),
+                                NumberStyles.AllowHexSpecifier);
+                int offset = int.Parse(ptrLine.Substring(29, 8),
+                                NumberStyles.AllowHexSpecifier);
+
+                ptrCode.Append(String.Format("6{0:X7} 00000000\nB{0:X7} 00000000\n", smAddy));
+                ptrCode.Append(
+                    //negative?
+                    offset < 0
+                    ? String.Format(
+                    "DC000000 {0:X8}\n" +
+                    "{1:X}8000000 {2:X8}\n" +
+                    "D2000000 00000000",
+                    offset - 0x08000000,
+                    ctFxn(ct), hc
+                    )
+                    : String.Format(
+                    "{0:X}{1:X7} {2:X8}\n" +
+                    "D2000000 00000000",
+                    ctFxn(ct),
+                    offset, hc
+                    )
+               );
+                
+                PtARDS.Text = ptrCode.ToString();
+            }
         }
         #endregion
 
@@ -391,8 +431,24 @@ namespace NDS_Toolkit
         private void CodePort_Click(object sender, RoutedEventArgs e)
         {
             string Ported = "";
-            CodeOutput.Text = "";
+            CodeOutput.Clear(); 
             StringBuilder cb = new StringBuilder();
+
+            //no input? alert the user.
+            if (String.IsNullOrEmpty(CodeInput.Text))
+            {
+                MessageBox.Show(this, "There is no code input.", "Error", 
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+                return; 
+            }
+
+            //no offset? alert the user.
+            if (String.IsNullOrEmpty(CodeOffset.Text))
+            {
+                MessageBox.Show(this, "No offset has been specified.", "Error", 
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
             foreach (string line in CodeInput.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
             {
@@ -435,16 +491,16 @@ namespace NDS_Toolkit
 
         private void CodeClear_Click(object sender, RoutedEventArgs e)
         {
-            CodeInput.Text = "";
-            CodeOutput.Text = "";
-            CodeOffset.Text = "";
+            CodeInput.Clear();
+            CodeOutput.Clear();
+            CodeOffset.Clear();
         }
         #endregion
 
         #region PatchCodeBuilder
         private void PatchBuild_Click(object sender, RoutedEventArgs e)
         {
-            PatchOutput.Text = "";
+            PatchOutput.Clear();
             PatchInput.Text = PatchInput.Text.Trim();
             StringBuilder pb = new StringBuilder();
             String[] PatchCode = PatchInput.Text.Split(new String[] { Environment.NewLine }, StringSplitOptions.None);
@@ -484,8 +540,8 @@ namespace NDS_Toolkit
 
         private void PatchClear_Click(object sender, RoutedEventArgs e)
         {
-            PatchInput.Text = "";
-            PatchOutput.Text = "";
+            PatchInput.Clear();
+            PatchOutput.Clear();
         }
         #endregion
 
@@ -514,7 +570,7 @@ namespace NDS_Toolkit
             //Did the user enter a full code?
             if (LoopBase.Text.Length != 17)
             {
-                LoopOutput.Text = "";
+                LoopOutput.Clear();
                 MessageBox.Show(this, "Please enter a full code (XXXXXXXX YYYYYYYY).",
                     "Base Code Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -527,7 +583,7 @@ namespace NDS_Toolkit
                 {
                     LoopOutput.Text = D5 + BaseValy + nLine + C0 + ConvCount + nLine + check + BaseAddy + nLine;
 
-                    if (LoopInc.Text != "") //if there's text in the increment textbox, add the value increment.
+                    if (!String.IsNullOrEmpty(LoopInc.Text)) //if there's text in the increment textbox, add the value increment.
                     {
                         int HalfInc = int.Parse(LoopInc.Text, NumberStyles.AllowHexSpecifier);
                         string FullInc = HalfInc.ToString("X8");
@@ -537,7 +593,7 @@ namespace NDS_Toolkit
                 }
                 else
                 {
-                    LoopOutput.Text = "";
+                    LoopOutput.Clear();
                     MessageBox.Show(this, "Please check to see if your base code starts with a '0' and if you've entered an offset increment of 1, 2, or 4.",
                         "Value Increment Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
@@ -563,7 +619,7 @@ namespace NDS_Toolkit
                 if (element is TextBox)
                 {
                     TextBox txtFields = (TextBox)element;
-                    txtFields.Text = "";
+                    txtFields.Clear();
                 }
             }
         }
