@@ -72,11 +72,33 @@ namespace NDS_Toolkit
         #endregion
 
         #region GlobalFunctions
-        private bool Valid_Code(String Code, String Pattern)
+        private bool Valid_Code(string Code, string Pattern)
         {
             if (Regex.IsMatch(Code, Pattern, RegexOptions.IgnoreCase))
                 return true;
             else return false;
+        }
+
+        private bool Verify(string code)
+        {
+            string[] raw = code.Split(new char[] { '\n' });
+
+            List<string> lines = new List<string>();
+            foreach (string curline in raw)
+            {
+                string line = curline.Trim();
+
+                if (!String.IsNullOrEmpty(line) && !line.StartsWith(":"))
+                    lines.Add(line);
+            }
+
+            // This is really, really ugly. But it gets the job done,
+            // removing the rest of the whitespace.
+            string final = String.Join(
+                "\n", lines
+            ).Replace(" ", "").Replace("\t", "").Replace("\n", "").Replace("\r", "");
+
+            return final.Length % 16 == 0 && Valid_Code(final, @"[0-9a-fA-F]+");
         }
 
         private string ctFxn(int ct)
@@ -622,6 +644,103 @@ namespace NDS_Toolkit
                     txtFields.Clear();
                 }
             }
+        }
+        #endregion
+
+        #region CodeBeautifier
+        private void CodeBeautify_Click(object sender, RoutedEventArgs e)
+        {
+            // First verify the input, or risk death.
+            if (!Verify(txtCodeInput.Text))
+            {
+                MessageBox.Show(this, "The code input is invalid.", "Error",
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // Build the code onto here.
+            List<string> processed = new List<string>();
+
+            foreach (string curline in txtCodeInput.Text.Split(new char[] { '\n' }))
+            {
+                // Trim everything.
+                string line = curline.Trim();
+
+                // Skip comments/blank liens if they aren't allowed.
+                if ((chkStripComments.IsChecked == true && line.StartsWith(":")) ||
+                    (chkStripBlankLines.IsChecked == true && String.IsNullOrEmpty(line)))
+                    continue;
+
+                // Add comments and blank lines directly...
+                if (line.StartsWith(":") || String.IsNullOrEmpty(line))
+                    processed.Add(line);
+                // Otherwise it's a line of code...
+                else
+                {
+                    // Enforce the Uppercase Hex option.
+                    if (chkUpperHex.IsChecked == true)
+                        line = line.ToUpper();
+
+                    // Remove the whitespace.
+                    line = line.Replace(" ", "").Replace("\t", "");
+
+                    // Condense all hunks of code into one line.
+                    // If processed is empty, or the last line in in processed is
+                    // either a blank line or a comment, we need to start a new
+                    // code line.
+                    if (processed.Count == 0 ||
+                        String.IsNullOrEmpty(processed[processed.Count - 1]) ||
+                        processed[processed.Count - 1].StartsWith(":"))
+                        processed.Add(line);
+                    else processed[processed.Count - 1] += line;
+                }
+            }
+
+            // Build the final result onto here.
+            List<string> final = new List<string>();
+
+            foreach (string curline in processed)
+            {
+                string line = curline;
+
+                if (line.StartsWith(":") || String.IsNullOrEmpty(line))
+                    final.Add(line);
+                else
+                {
+                    // If we don't have the right number of characters, uh-oh...
+                    // bail out and call it invalid.
+                    if (line.Length % 16 != 0)
+                    {
+                        MessageBox.Show(this, "The code input is invalid.", "Error",
+                                        MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    while (!String.IsNullOrEmpty(line))
+                    {
+                        final.Add(line.Substring(0, 16).Insert(8, " "));
+                        line = line.Remove(0, 16);
+                    }
+                }
+            }
+
+            txtCodeOutput.Text = String.Join("\n", final);
+        }
+
+        private void BeautifyCopy_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(txtCodeOutput.Text);
+        }
+
+        private void BeautifyPaste_Click(object sender, RoutedEventArgs e)
+        {
+            txtCodeInput.Paste();
+        }
+
+        private void BeautifyClear_Click(object sender, RoutedEventArgs e)
+        {
+            txtCodeInput.Clear();
+            txtCodeOutput.Clear();
         }
         #endregion
     }
