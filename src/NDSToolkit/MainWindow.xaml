@@ -247,7 +247,7 @@
             </TabItem>
             <TabItem Header="Code Porter">
                 <Grid HorizontalAlignment="Stretch" Name="grid3" VerticalAlignment="Stretch">
-                    <TextBox AcceptsReturn="True" BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Normal" FontFamily="Courier New" FontSize="11.5" HorizontalAlignment="Left" Margin="2,25,0,0" Name="CodeInput" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="220" Height="371">
+                    <TextBox AcceptsReturn="True" BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Normal" FontFamily="Courier New" FontSize="11.5" HorizontalAlignment="Left" Margin="2,25,0,0" Name="CodeInput" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="220" Height="371" DataContext="{Binding}">
                         <TextBox.Background>
                             <LinearGradientBrush>
                                 <GradientStop Color="LightGray" Offset="0" />
@@ -366,6 +366,39 @@
                             <Button BorderBrush="DarkGray" Content="Clear" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="246,347,0,0" Name="PatchClear" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="75" FontWeight="Normal" Click="PatchClear_Click" />
                         </Grid>
                     </GroupBox>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Code Beautifier">
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <TextBox AcceptsReturn="True" BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Normal" FontFamily="Courier New" FontSize="11.5" Height="371" HorizontalAlignment="Left" Margin="2,25,0,0" Name="textBox1" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="220">
+                        <TextBox.Background>
+                            <LinearGradientBrush>
+                                <GradientStop Color="LightGray" Offset="0" />
+                                <GradientStop Color="White" Offset="1" />
+                            </LinearGradientBrush>
+                        </TextBox.Background>
+                    </TextBox>
+                    <TextBox AcceptsReturn="True" BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Normal" FontFamily="Courier New" FontSize="11.5" Height="371" HorizontalAlignment="Left" IsReadOnly="True" Margin="355,25,0,0" Name="textBox2" TextChanged="TextBox_TextChanged" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="220">
+                        <TextBox.Background>
+                            <LinearGradientBrush>
+                                <GradientStop Color="LightGray" Offset="0" />
+                                <GradientStop Color="White" Offset="1" />
+                            </LinearGradientBrush>
+                        </TextBox.Background>
+                    </TextBox>
+                    <Label Content="Code Input:" Foreground="LightGray" Height="28" HorizontalAlignment="Left" Name="label21" VerticalAlignment="Top" Margin="2,0,0,0" />
+                    <Label Content="Code Output:" Foreground="LightGray" Height="28" HorizontalAlignment="Left" Margin="355,0,0,0" Name="label22" VerticalAlignment="Top" />
+                    <GroupBox FontWeight="Bold" Foreground="LightGray" Header="Options" Height="100" HorizontalAlignment="Left" Margin="228,16,0,0" Name="groupBox5" VerticalAlignment="Top" Width="121">
+                        <Grid>
+                            <CheckBox Content="Uppercase Hex" Height="16" HorizontalAlignment="Left" Margin="2,0,0,0" Name="checkBox1" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" FontSize="12" />
+                            <CheckBox Content="Strip Blank Lines" Height="16" HorizontalAlignment="Left" Margin="2,28,0,0" Name="checkBox2" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" FontSize="12" />
+                            <CheckBox Content="Strip Comments" Height="16" HorizontalAlignment="Left" Margin="2,55,0,0" Name="checkBox3" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" FontSize="12" />
+                        </Grid>
+                    </GroupBox>
+                    <Button BorderBrush="DarkGray" Click="CodePort_Click" Content="Beautify" FontWeight="Normal" Foreground="#FFFFFFFF" Height="40" HorizontalAlignment="Left" Margin="228,122,0,0" Name="button1" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="121" />
+                    <Button BorderBrush="DarkGray" Click="CodeCopy_Click" Content="Copy" FontWeight="Normal" Foreground="#FFFFFFFF" Height="40" HorizontalAlignment="Left" Margin="228,168,0,0" Name="button2" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="121" />
+                    <Button BorderBrush="DarkGray" Click="CodePaste_Click" Content="Paste" FontWeight="Normal" Foreground="#FFFFFFFF" Height="40" HorizontalAlignment="Left" Margin="228,214,0,0" Name="button3" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="121" />
+                    <Button BorderBrush="DarkGray" Click="CodeClear_Click" Content="Clear" FontWeight="Normal" Foreground="#FFFFFFFF" Height="40" HorizontalAlignment="Left" Margin="228,260,0,0" Name="button4" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="121" />
                 </Grid>
             </TabItem>
         </TabControl>

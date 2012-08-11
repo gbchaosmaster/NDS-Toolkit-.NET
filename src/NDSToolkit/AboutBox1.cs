@@ -106,7 +106,7 @@ namespace NDS_Toolkit
             string nLine = Environment.NewLine;
 
             labelProductName.Text = "Product: NDS Toolkit";
-            labelVersion.Text = "Version: 1.1";
+            labelVersion.Text = "Version: 1.2";
             labelCopyright.Text = "Author: Demonic722";
             labelCompanyName.Text = "Website(s): Syntechx.com, GameHacking.org";
             textBoxDescription.Text = "Formerly known as NDS Hacking Kit, NDS Toolkit is the continuation of that project; It's simply " +
