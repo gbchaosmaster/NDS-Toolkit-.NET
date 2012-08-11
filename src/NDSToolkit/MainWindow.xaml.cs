@@ -354,7 +354,7 @@ namespace NDS_Toolkit
 
                 //parse the offset value
                 int SmallCheck = int.Parse(Address.Substring(29, 8),
-                                           NumberStyles.AllowHexSpecifier);
+                                    NumberStyles.AllowHexSpecifier);
 
                 //if the result is the best so far, save some data about it
                 if (Smallest == 0 || SmallCheck < Smallest)
@@ -420,7 +420,7 @@ namespace NDS_Toolkit
                     ctFxn(ct),
                     offset, hc
                     )
-               );
+                );
                 
                 PtARDS.Text = ptrCode.ToString();
             }
