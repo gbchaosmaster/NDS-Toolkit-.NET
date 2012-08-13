@@ -26,7 +26,6 @@ namespace NDS_Toolkit
     public partial class MainWindow : Window
     {
         long Length1 = 0, Length2 = 0;
-        string nLine = Environment.NewLine;
 
         //File Dialogs
         OpenFileDialog openFileOne = new OpenFileDialog();
@@ -456,16 +455,16 @@ namespace NDS_Toolkit
                     {
                         Ported = CodeAdd.IsChecked == true ? (ValyConvert + OffyConvert).ToString("X8") :
                             (ValyConvert - OffyConvert).ToString("X8");
-                        cb.Append(AddyOnly.ToUpper() + " " + Ported.ToUpper() + nLine);
+                        cb.Append(AddyOnly.ToUpper() + " " + Ported.ToUpper() + '\n');
                     }
                     else //non-Dx lines
                     {
                         Ported = CodeAdd.IsChecked == true ? (AddyConvert + OffyConvert).ToString("X8") :
                             (AddyConvert - OffyConvert).ToString("X8");
-                        cb.Append(Ported.ToUpper() + " " + ValyOnly.ToUpper() + nLine);
+                        cb.Append(Ported.ToUpper() + " " + ValyOnly.ToUpper() + '\n');
                     }
                 }
-                else cb.Append(line + nLine); //everything else
+                else cb.Append(line + '\n'); //everything else
             }
             CodeOutput.Text = cb.ToString();
         }
@@ -501,7 +500,7 @@ namespace NDS_Toolkit
             CodeOffset *= 4; //multiply by 4 to get the offset
 
             string CodeAddress = PatchCode[0].Substring(1, 8);
-            pb.Append("E" + CodeAddress + CodeOffset.ToString("X8") + nLine);
+            pb.Append("E" + CodeAddress + CodeOffset.ToString("X8") + '\n');
 
             for (int y = 0; y < PatchCode.Length; y++)
             {
@@ -510,7 +509,7 @@ namespace NDS_Toolkit
                 if (y % 2 == 0)
                     pb.Append(CodeValues + " ");
                 else
-                    pb.Append(CodeValues + nLine);
+                    pb.Append(CodeValues + '\n');
             }
 
             if (CodeCheck % 2 != 0)
@@ -572,13 +571,13 @@ namespace NDS_Toolkit
 
                 if (LoopBase.Text[0] == '0')
                 {
-                    LoopOutput.Text = D5 + BaseValy + nLine + C0 + ConvCount + nLine + check + BaseAddy + nLine;
+                    LoopOutput.Text = D5 + BaseValy + '\n' + C0 + ConvCount + '\n' + check + BaseAddy + '\n';
 
                     if (!String.IsNullOrEmpty(LoopInc.Text)) //if there's text in the increment textbox, add the value increment.
                     {
                         int HalfInc = int.Parse(LoopInc.Text, NumberStyles.AllowHexSpecifier);
                         string FullInc = HalfInc.ToString("X8");
-                        LoopOutput.Text += D4 + FullInc + nLine + D2;
+                        LoopOutput.Text += D4 + FullInc + '\n' + D2;
                     }
                     else LoopOutput.Text += D2; //else, don't add the value increment.
                 }
@@ -592,7 +591,7 @@ namespace NDS_Toolkit
             else if (LoopBase.Text.Length == 17 && !run)
             {
                 if (LoopBase.Text[0] >= '0' && LoopBase.Text[0] < '3')
-                    LoopOutput.Text = C0 + ConvCount + nLine + LoopBase.Text + nLine + DC + FullOffset + nLine + D2;
+                    LoopOutput.Text = C0 + ConvCount + '\n' + LoopBase.Text + '\n' + DC + FullOffset + '\n' + D2;
                 else MessageBox.Show(this, "Invalid Data! Please start your code off with a 0, 1, or 2.", "Data Input Error",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
