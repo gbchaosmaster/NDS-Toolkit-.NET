@@ -14,8 +14,8 @@ namespace NDS_Toolkit
             /*NOT_GBA and NOT_NDS will hold the 
              *16-bit values of NOT_GBATotal and NOT_NDSTotal
              */
-            int NOT_GBA = (ushort)~GBATotal;
-            int NOT_NDS = (ushort)~NDSTotal; 
+            ushort NOT_GBA = (ushort)~GBATotal;
+            ushort NOT_NDS = (ushort)~NDSTotal; 
 
             if (GBATotal != 0)
                 GBA = true;
