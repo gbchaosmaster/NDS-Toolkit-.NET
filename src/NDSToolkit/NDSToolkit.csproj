@@ -60,6 +60,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ButtonGenerator.cs" />
     <Compile Include="CheatDownload.xaml.cs">
       <DependentUpon>CheatDownload.xaml</DependentUpon>
     </Compile>

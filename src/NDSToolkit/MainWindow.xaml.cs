@@ -163,73 +163,42 @@ namespace NDS_Toolkit
         #endregion
 
         #region ButtonGenerator
+        ButtonGenerator BTN = new ButtonGenerator();
         private void ButtonGen_Click(object sender, RoutedEventArgs e)
         {
             int GBATotal = 0, NDSTotal = 0;
             bool GBA = false, NDS = false;
-
+         
             if (chkA.IsChecked == true)
-                GBATotal += 0x0001;
+                GBATotal |= 0x0001;
             if (chkB.IsChecked == true)
-                GBATotal += 0x0002;
+                GBATotal |= 0x0002;
             if (chkS.IsChecked == true)
-                GBATotal += 0x0004;
+                GBATotal |= 0x0004;
             if (chkT.IsChecked == true)
-                GBATotal += 0x0008;
+                GBATotal |= 0x0008;
             if (chkI.IsChecked == true)
-                GBATotal += 0x0010;
+                GBATotal |= 0x0010;
             if (chkE.IsChecked == true)
-                GBATotal += 0x0020;
+                GBATotal |= 0x0020;
             if (chkU.IsChecked == true)
-                GBATotal += 0x0040;
+                GBATotal |= 0x0040;
             if (chkD.IsChecked == true)
-                GBATotal += 0x0080;
+                GBATotal |= 0x0080;
             if (chkR.IsChecked == true)
-                GBATotal += 0x0100;
+                GBATotal |= 0x0100;
             if (chkL.IsChecked == true)
-                GBATotal += 0x0200;
+                GBATotal |= 0x0200;
             if (chkX.IsChecked == true)
-                NDSTotal += 0x0400;
+                NDSTotal |= 0x0400;
             if (chkY.IsChecked == true)
-                NDSTotal += 0x0800;
+                NDSTotal |= 0x0800;
             if (chkG.IsChecked == true)
-                NDSTotal += 0x2000;
+                NDSTotal |= 0x2000;
             if (chkF.IsChecked == true)
-                NDSTotal += 0x8000;
-
-            string GBAConverted = (0xFFFF - GBATotal).ToString("X") + "0000";
-            string NDSConverted = (0xFFFF - NDSTotal).ToString("X") + "0000";
-
-            if (GBATotal != 0)
-                GBA = true;
-            if (NDSTotal != 0)
-                NDS = true;
-
-            if (GBA == true)
-            {
-                ButtonOutput.Text = "94000130 " + GBAConverted + nLine + ButtonInput.Text + nLine + D2;
-                GBATst.Text = "GBA tst Value: 0x" + GBATotal.ToString("X4");
-            }
-            else GBATst.Clear(); 
-
-            if (NDS == true)
-            {
-                ButtonOutput.Text = "927FFFA8 " + NDSConverted + nLine + ButtonInput.Text + nLine + D2;
-                NDSTst.Text = "NDS tst Value: 0x" + NDSTotal.ToString("X4");
-            }
-            else NDSTst.Clear();
-
-            if (GBA == true && NDS == true)
-            {
-                ButtonOutput.Text = "927FFFA8 " + NDSConverted + nLine + "94000130 " + 
-                    GBAConverted + nLine + ButtonInput.Text + nLine + D2;
-            }
-            else if (GBA == false && NDS == false)
-            {
-                ButtonOutput.Clear();
-                GBATst.Clear();
-                NDSTst.Clear();
-            }
+                NDSTotal |= 0x8000;
+            
+            BTN.ButtonCode(GBATotal, NDSTotal, GBA, NDS,ButtonInput, ButtonOutput, NDSTst, GBATst);
         }
 
         private void ButtonClear_Click(object sender, RoutedEventArgs e)
