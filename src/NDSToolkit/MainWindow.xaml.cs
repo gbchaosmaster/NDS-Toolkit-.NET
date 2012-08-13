@@ -314,9 +314,9 @@ namespace NDS_Toolkit
                 int Offset2 = Addy2 - File2.ReadInt32();
 
                 /*Based on the checkbox that was checked:
-                 *when positive is checked, it'll check to see if the offset is than or equal to
-                 *the positive max offset the user entered and it will then check if the offset
-                 *is actually positive (greater than 0).
+                 *when positive is checked, it'll check to see if the offset is less than or
+                 *equal to the positive max offset the user entered and it will then check if the
+                 *offset is actually positive (greater than 0).
                  *
                  *when negative is checked, it'll check to see if the offset is greater than or
                  *equal to the negative max offset the user entered and it will then check if the
