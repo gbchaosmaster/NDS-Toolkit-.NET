@@ -584,8 +584,9 @@ namespace NDS_Toolkit
                 else
                 {
                     LoopOutput.Clear();
-                    MessageBox.Show(this, "Please check to see if your base code starts with a '0' and if you've entered an offset increment of 1, 2, or 4.",
-                        "Value Increment Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(this, "Please check to see if your base code starts with a '0' and if you've entered " + 
+                                    "an offset increment of 1, 2, or 4.", "Value Increment Error", MessageBoxButton.OK, 
+                                                                                                MessageBoxImage.Error);
                 }
             }
             else if (LoopBase.Text.Length == 17 && !run)
@@ -593,7 +594,7 @@ namespace NDS_Toolkit
                 if (LoopBase.Text[0] >= '0' && LoopBase.Text[0] < '3')
                     LoopOutput.Text = C0 + ConvCount + '\n' + LoopBase.Text + '\n' + DC + FullOffset + '\n' + D2;
                 else MessageBox.Show(this, "Invalid Data! Please start your code off with a 0, 1, or 2.", "Data Input Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                                                                                 MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
