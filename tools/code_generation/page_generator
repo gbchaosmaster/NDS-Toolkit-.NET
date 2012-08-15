@@ -9,7 +9,7 @@ MAIN_XML, MAIN_SRC = "MainWindow.xaml", "MainWindow.xaml.cs"
 # Unless both of the above files exist, error and exit.
 unless File.exist?(MAIN_XML) && File.exist?(MAIN_SRC)
   puts "The following files could not be found:"
-  puts [MAIN_XML, MAIN_SRC].select { |f| !File.exists? f }.join "\n"
+  puts [MAIN_XML, MAIN_SRC].reject { |f| File.exists? f }
   exit
 end
 
