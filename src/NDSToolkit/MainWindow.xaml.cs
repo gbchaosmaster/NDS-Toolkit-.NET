@@ -34,7 +34,7 @@ namespace NDSToolkit
             InitializeComponent();
         }
 
-        #region Misc
+        #region MenuItems
         private void ExitMenu_Click(object sender, RoutedEventArgs e)
         {
             this.Close(); 
