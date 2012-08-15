@@ -71,11 +71,9 @@ namespace NDS_Toolkit
         #endregion
 
         #region GlobalFunctions
-        private bool Valid_Code(string Code, string Pattern)
+        private bool Valid_Code(string code, string pattern)
         {
-            if (Regex.IsMatch(Code, Pattern, RegexOptions.IgnoreCase))
-                return true;
-            else return false;
+            return Regex.IsMatch(code, pattern, RegexOptions.IgnoreCase);
         }
 
         private bool Verify(string code)
@@ -100,13 +98,17 @@ namespace NDS_Toolkit
             return final.Length % 16 == 0 && Valid_Code(final, @"[0-9a-fA-F]+");
         }
 
-        private string ctFxn(int ct)
+        private string getCodeType(int ct)
         {
             int hc = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
 
             //get the code type based on the Hex Value input
-            ct = hc >= 0 && hc <= 255 ? 2 :
-                hc > 255 && hc <= 65535 ? 1 : 0;
+            ct = hc >= 0 && hc <= 255
+                 ? 2
+                 : hc > 255 && hc <= 65535
+                   ? 1
+                   : 0;
+
             return ct.ToString("X");
         }
 
@@ -364,12 +366,12 @@ namespace NDS_Toolkit
                     "{1:X}8000000 {2:X8}\n" +
                     "D2000000 00000000",
                     Smallest - 0x08000000,
-                    ctFxn(ct), hc
+                    getCodeType(ct), hc
                  )
                  : String.Format(
                      "{0:X}{1:X7} {2:X8}\n" +
                      "D2000000 00000000",
-                     ctFxn(ct),
+                     getCodeType(ct),
                      Smallest, hc
                  )
             );
@@ -402,12 +404,12 @@ namespace NDS_Toolkit
                     "{1:X}8000000 {2:X8}\n" +
                     "D2000000 00000000",
                     offset - 0x08000000,
-                    ctFxn(ct), hc
+                    getCodeType(ct), hc
                     )
                     : String.Format(
                     "{0:X}{1:X7} {2:X8}\n" +
                     "D2000000 00000000",
-                    ctFxn(ct),
+                    getCodeType(ct),
                     offset, hc
                     )
                 );
