@@ -1,22 +1,13 @@
 ﻿using System;
 using System.IO;
-using System.Data;
 using System.Globalization;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Windows;
-using Microsoft.Win32;
-using System.Reflection;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Text.RegularExpressions;
+using Microsoft.Win32;
 
 namespace NDS_Toolkit
 {
@@ -227,7 +218,7 @@ namespace NDS_Toolkit
 
             if ((openFileOne.ShowDialog() == true) && (openFileOne.OpenFile() != null))
             {
-                FileOneRead.Text = System.IO.Path.GetFileName(openFileOne.FileName);
+                FileOneRead.Text = Path.GetFileName(openFileOne.FileName);
                 Length1 = openFileOne.OpenFile().Length;
             }
 
@@ -241,7 +232,7 @@ namespace NDS_Toolkit
 
             if ((openFileTwo.ShowDialog() == true) && (openFileTwo.OpenFile() != null))
             {
-                FileTwoRead.Text = System.IO.Path.GetFileName(openFileTwo.FileName);
+                FileTwoRead.Text = Path.GetFileName(openFileTwo.FileName);
                 Length2 = openFileTwo.OpenFile().Length;
             }
 
