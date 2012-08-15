@@ -65,7 +65,7 @@ namespace NDS_Toolkit
 
         private void CheatMenu_Click(object sender, RoutedEventArgs e)
         {
-            Window1 window = new Window1();
+            CheatDownload window = new CheatDownload();
             window.Show();
         }
         #endregion

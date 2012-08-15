@@ -17,14 +17,16 @@ using System.Windows.Shapes;
 namespace NDS_Toolkit
 {
     /// <summary>
-    /// Interaction logic for Window1.xaml
+    /// Interaction logic for CheatDownload.xaml
     /// </summary>
-    public partial class Window1 : Window
+    public partial class CheatDownload : Window
     {
-        public Window1()
+        public CheatDownload()
         {
             InitializeComponent();
         }
+
+        const string usrcheat = "http://syntechx.com/downloads/usrcheat.rar";
 
         private byte[] usrcheatDownloaded; //set the current size (in bytes)
         SaveFileDialog saveUsrcheat = new SaveFileDialog();
@@ -32,6 +34,8 @@ namespace NDS_Toolkit
 
         private void usrcheatDownload(string usrcheat) //connects and tries to download the usrcheat
         {
+            Title = "Downloading...";
+
             progressBar1.Value = 0; //empty the progress bar
             usrcheatDownloaded = new byte[0];
 
@@ -50,9 +54,6 @@ namespace NDS_Toolkit
 
                 //set the progressbar's max value to the usrcheatLength
                 progressBar1.Maximum = usrcheatLength;
-
-                if (progressBar1.Value != progressBar1.Maximum)
-                    Title = "Downloading...";
 
                 //Time to download...
                 MemoryStream memStream = new MemoryStream();
@@ -92,30 +93,30 @@ namespace NDS_Toolkit
                 MessageBox.Show("A problem occurred while trying to download the latest usrcheat. Please check your internet settings and retry.",
                     "Download Incomplete", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+            Title = "Download Complete";
         }
 
         private void DownloadLatest_Click(object sender, RoutedEventArgs e)
         {
-            string usrcheat = "http://syntechx.com/downloads/usrcheat.rar";
-            usrcheatDownload(usrcheat);
+            //set our file name to the usrcheat name
+            saveUsrcheat.FileName = usrcheat.Substring(usrcheat.LastIndexOf('/') + 1);
+            //filter file types to save as
+            saveUsrcheat.Filter = "RAR Archive (*.rar)|*.rar|All Files (*.*)|*.*";
 
-            if (usrcheatDownloaded != null && usrcheatDownloaded.Length != 0)
+            //show them the dialog and only continue if they choose a location
+            if (saveUsrcheat.ShowDialog() == true)
             {
-                string urlName = usrcheat;
-                urlName = urlName.Substring(urlName.LastIndexOf('/') + 1); //get the file name
-                saveUsrcheat.FileName = urlName; //sets our file name to the usrcheat name
-            }
-
-            saveUsrcheat.Filter = "WinRAR archive |*.rar";
-
-            if (progressBar1.Value == progressBar1.Maximum && usrcheatDownloaded != null && saveUsrcheat.ShowDialog() == true)
-            {
-                //Write the bytes to the newly created file
-                FileStream newFile = new FileStream(saveUsrcheat.FileName, FileMode.Create);
-                newFile.Write(usrcheatDownloaded, 0, usrcheatDownloaded.Length);
-                newFile.Close();
-                MessageBox.Show("Successfully downloaded the latest usrcheat.", "Download Complete");
-                this.Close();
+                usrcheatDownload(usrcheat);
+                if (usrcheatDownloaded != null)
+                {
+                    //Write the bytes to the newly created file
+                    FileStream newFile = new FileStream(saveUsrcheat.FileName, FileMode.Create);
+                    newFile.Write(usrcheatDownloaded, 0, usrcheatDownloaded.Length);
+                    newFile.Close();
+                    MessageBox.Show("Successfully downloaded the latest usrcheat.", "Download Complete");
+                    this.Close();
+                }
             }
         }
     }
