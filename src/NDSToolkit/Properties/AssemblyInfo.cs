@@ -8,11 +8,11 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("NDS Toolkit")]
-[assembly: AssemblyDescription("NDS Toolkit")]
+[assembly: AssemblyDescription("An AiO NDS application.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SyntechX.com")]
 [assembly: AssemblyProduct("NDS Toolkit")]
-[assembly: AssemblyCopyright("Copyright ©  2011-2012 SyntechX.com")]
+[assembly: AssemblyCopyright("Copyright © 2011-2012 SyntechX.com")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,6 +51,6 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.2")]
-[assembly: AssemblyFileVersion("1.0.0.2")]
+[assembly: AssemblyVersion("1.5.0.0")]
+[assembly: AssemblyFileVersion("1.5.0.0")]
 [assembly: NeutralResourcesLanguageAttribute("en-US")]

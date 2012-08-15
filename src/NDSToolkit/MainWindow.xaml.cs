@@ -50,7 +50,7 @@ namespace NDS_Toolkit
 
         private void AboutMenu_Click(object sender, RoutedEventArgs e)
         {
-            AboutBox1 box = new AboutBox1();
+            AboutBox box = new AboutBox();
             box.ShowDialog();
         }
 
