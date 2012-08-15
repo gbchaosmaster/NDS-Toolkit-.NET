@@ -98,16 +98,16 @@ namespace NDS_Toolkit
             return final.Length % 16 == 0 && Valid_Code(final, @"[0-9a-fA-F]+");
         }
 
-        private string getCodeType(int ct)
+        private string getCodeType()
         {
             int hc = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
 
             //get the code type based on the Hex Value input
-            ct = hc >= 0 && hc <= 255
-                 ? 2
-                 : hc > 255 && hc <= 65535
-                   ? 1
-                   : 0;
+            int ct = hc >= 0 && hc <= 255
+                     ? 2
+                     : hc > 255 && hc <= 65535
+                       ? 1
+                       : 0;
 
             return ct.ToString("X");
         }
@@ -219,9 +219,11 @@ namespace NDS_Toolkit
         #endregion
 
         #region PointerSearcher
+        const string binFilter = "Binary Files (*.bin)|*.bin|All Files (*.*)|*.*";
+
         private void FileOne_Click(object sender, RoutedEventArgs e)
         {
-            openFileOne.Filter = "Binary file (*.bin)|*.bin";
+            openFileOne.Filter = binFilter;
 
             if ((openFileOne.ShowDialog() == true) && (openFileOne.OpenFile() != null))
             {
@@ -235,7 +237,7 @@ namespace NDS_Toolkit
 
         private void FileTwo_Click(object sender, RoutedEventArgs e)
         {
-            openFileTwo.Filter = "Binary file (*.bin)|*.bin";
+            openFileTwo.Filter = binFilter;
 
             if ((openFileTwo.ShowDialog() == true) && (openFileTwo.OpenFile() != null))
             {
@@ -318,16 +320,25 @@ namespace NDS_Toolkit
                     ptrResults.Items.Add(String.Format("0x{0:X8} : 0x{1:X8} :: 0x{2:X8}",
                                                    i + 0x02000000, Addy1 - Offset1, Offset1));
             }
+
+            if (ptrResults.Items.Count == 0)
+            {
+                MessageBox.Show(this, "No results were found.", "No Results",
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
   
             /*Smallest = smallest value, 
              *SmallestAddy1 = smallest address 1
              */
 
-            int ct = 0, Smallest = 0;
-            string SmallestAddy1 = "";
+            int SmallestIndex = 0;
+            int SmallestOffset = 0;
 
-            foreach (string Address in ptrResults.Items)
+            for (int i = 0; i < ptrResults.Items.Count; ++i)
             {
+                string Address = ptrResults.Items[i].ToString();
+
                 //make sure we didn't grab a blank
                 if (Address.Trim() == "")
                     continue;
@@ -337,73 +348,54 @@ namespace NDS_Toolkit
                                     NumberStyles.AllowHexSpecifier);
 
                 //if the result is the best so far, save some data about it
-                if (Smallest == 0 || SmallCheck < Smallest)
+                if (SmallestOffset == 0 || SmallCheck < SmallestOffset)
                 {
-                    Smallest = SmallCheck;
-                    SmallestAddy1 = Address.Substring(3, 7);
+                    SmallestIndex = i;
+                    SmallestOffset = SmallCheck;
                 }
             }
 
-            ptrCode.Append(String.Format("6{0} 00000000\nB{0} 00000000\n",
-                                         SmallestAddy1));
-            ptrCode.Append(
-                //negative?
-                Smallest < 0
-                ? String.Format(
-                    "DC000000 {0:X8}\n" +
-                    "{1:X}8000000 {2:X8}\n" +
-                    "D2000000 00000000",
-                    Smallest - 0x08000000,
-                    getCodeType(ct), hc
-                 )
-                 : String.Format(
-                     "{0:X}{1:X7} {2:X8}\n" +
-                     "D2000000 00000000",
-                     getCodeType(ct),
-                     Smallest, hc
-                 )
-            );
-
-            PtARDS.Text = ptrCode.ToString();
+            //select the smallest one and focus on the listbox
+            //this selection change will trigger the event that gets the pointer code
+            ptrResults.SelectedIndex = SmallestIndex;
+            ptrResults.Focus();
         }
 
         private void ptrResults_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            string ptrLine = ptrResults.SelectedItem.ToString();
+            setPtrCode(ptrLine.Substring(3, 7), ptrLine.Substring(29, 8));
+        }
+
+        private void setPtrCode(string addressStr, string offsetStr)
+        {
+            StringBuilder ptrCode = new StringBuilder();
+
             int hc = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
+            int address = int.Parse(addressStr, NumberStyles.AllowHexSpecifier);
+            int offset = int.Parse(offsetStr, NumberStyles.AllowHexSpecifier);
 
-            if (ptrResults.SelectedIndex > -1)
-            {
-                int ct = 0;
-                StringBuilder ptrCode = new StringBuilder();
-                string ptrLine = ptrResults.SelectedItem.ToString();
-
-                //fetch the address and offset from the selected line
-                int smAddy = int.Parse(ptrLine.Substring(3, 7),
-                                NumberStyles.AllowHexSpecifier);
-                int offset = int.Parse(ptrLine.Substring(29, 8),
-                                NumberStyles.AllowHexSpecifier);
-
-                ptrCode.Append(String.Format("6{0:X7} 00000000\nB{0:X7} 00000000\n", smAddy));
-                ptrCode.Append(
-                    //negative?
-                    offset < 0
-                    ? String.Format(
-                    "DC000000 {0:X8}\n" +
-                    "{1:X}8000000 {2:X8}\n" +
-                    "D2000000 00000000",
-                    offset - 0x08000000,
-                    getCodeType(ct), hc
-                    )
-                    : String.Format(
-                    "{0:X}{1:X7} {2:X8}\n" +
-                    "D2000000 00000000",
-                    getCodeType(ct),
-                    offset, hc
-                    )
-                );
-                
-                PtARDS.Text = ptrCode.ToString();
-            }
+            ptrCode.Append(String.Format("6{0:X7} 00000000\nB{0:X7} 00000000\n", address));
+            ptrCode.Append(
+                offset < 0
+                //negative offset
+                ? String.Format(
+                "DC000000 {0:X8}\n" +
+                "{1:X}8000000 {2:X8}\n" +
+                "D2000000 00000000",
+                offset - 0x08000000,
+                getCodeType(), hc
+                )
+                //positive offset
+                : String.Format(
+                "{0:X}{1:X7} {2:X8}\n" +
+                "D2000000 00000000",
+                getCodeType(),
+                offset, hc
+                )
+            );
+            
+            PtARDS.Text = ptrCode.ToString();
         }
         #endregion
 
