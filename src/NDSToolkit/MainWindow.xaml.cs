@@ -138,24 +138,6 @@ namespace NDS_Toolkit
                 LoopBase.SelectionStart = 10;
             }
 
-            //Helder's requested Pointer feature
-            if (!String.IsNullOrEmpty(FileOneRead.Text) && !String.IsNullOrEmpty(FileTwoRead.Text))
-            {
-                string ReadToAddy1 = FileOneRead.Text.Substring(FileOneRead.Text.IndexOf(".bin") - 8, 8);
-                string ReadToAddy2 = FileTwoRead.Text.Substring(FileTwoRead.Text.IndexOf(".bin") - 8, 8);
-
-                if (Valid_Code(ReadToAddy1, "[0-F]{8}") && Valid_Code(ReadToAddy2, "[0-F]{8}"))
-                {
-                    AddressOne.Text = ReadToAddy1;
-                    AddressTwo.Text = ReadToAddy2;
-                }
-                else
-                {
-                    AddressOne.Clear();
-                    AddressTwo.Clear();
-                }
-            }
-
             //CodePorter; elixirdream's requested feature 
             if (!String.IsNullOrEmpty(CodeOutput.Text))
                 CodeOutput.IsReadOnly = false;
@@ -246,6 +228,9 @@ namespace NDS_Toolkit
                 FileOneRead.Text = System.IO.Path.GetFileName(openFileOne.FileName);
                 Length1 = openFileOne.OpenFile().Length;
             }
+
+            string ReadToAddy1 = FileOneRead.Text.Substring(FileOneRead.Text.IndexOf(".bin") - 8, 8);
+            AddressOne.Text = Valid_Code(ReadToAddy1, "[0-F]{8}") ? ReadToAddy1 : "";
         }
 
         private void FileTwo_Click(object sender, RoutedEventArgs e)
@@ -257,6 +242,9 @@ namespace NDS_Toolkit
                 FileTwoRead.Text = System.IO.Path.GetFileName(openFileTwo.FileName);
                 Length2 = openFileTwo.OpenFile().Length;
             }
+
+            string ReadToAddy2 = FileTwoRead.Text.Substring(FileTwoRead.Text.IndexOf(".bin") - 8, 8);
+            AddressTwo.Text = Valid_Code(ReadToAddy2, "[0-F]{8}") ? ReadToAddy2 : "";
         }
 
         private void PointerSearch_Click(object sender, RoutedEventArgs e)
