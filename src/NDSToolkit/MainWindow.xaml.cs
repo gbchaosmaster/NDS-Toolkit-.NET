@@ -42,14 +42,12 @@ namespace NDSToolkit
 
         private void AboutMenu_Click(object sender, RoutedEventArgs e)
         {
-            AboutBox box = new AboutBox();
-            box.ShowDialog();
+            new AboutBox().Show();
         }
 
         private void CheatMenu_Click(object sender, RoutedEventArgs e)
         {
-            CheatDownload window = new CheatDownload();
-            window.Show();
+            new CheatDownload().Show();
         }
         #endregion
 
