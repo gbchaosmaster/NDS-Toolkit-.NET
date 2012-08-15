@@ -16,18 +16,16 @@ namespace NDSToolkit
     /// </summary>
     public partial class MainWindow : Window
     {
-        long Length1 = 0, Length2 = 0;
-
         //File Dialogs
         OpenFileDialog openFileOne = new OpenFileDialog();
         OpenFileDialog openFileTwo = new OpenFileDialog();
 
         //Code types
-        string D2 = "D2000000 00000000";
-        string DC = "DC000000 ", C0 = "C0000000 ";
-        string D4 = "D4000000 ", D5 = "D5000000 ";
-        string D6 = "D6000000 ", D7 = "D7000000 ";
-        string D8 = "D8000000 "; 
+        const string D2 = "D2000000 00000000";
+        const string DC = "DC000000 ", C0 = "C0000000 ";
+        const string D4 = "D4000000 ", D5 = "D5000000 ";
+        const string D6 = "D6000000 ", D7 = "D7000000 ";
+        const string D8 = "D8000000 "; 
 
         public MainWindow()
         {
@@ -171,6 +169,8 @@ namespace NDSToolkit
         #region PointerSearcher
         const string binFilter = "Binary Files (*.bin)|*.bin|All Files (*.*)|*.*";
 
+        long Length1 = 0, Length2 = 0;
+
         private void FileOne_Click(object sender, RoutedEventArgs e)
         {
             openFileOne.Filter = binFilter;
@@ -184,7 +184,6 @@ namespace NDSToolkit
             string ReadToAddy1 = FileOneRead.Text.Substring(FileOneRead.Text.IndexOf(".bin") - 8, 8);
             AddressOne.Text = Valid_Code(ReadToAddy1, "[0-F]{8}") ? ReadToAddy1 : "";
         }
-
         private void FileTwo_Click(object sender, RoutedEventArgs e)
         {
             openFileTwo.Filter = binFilter;
