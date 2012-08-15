@@ -1,7 +1,7 @@
 ﻿<Window x:Class="NDSToolkit.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="NDS Toolkit" WindowStartupLocation="CenterScreen" WindowState="Normal" ResizeMode="CanMinimize" Icon="/NDS%20Toolkit;component/programico.ico" Margin="0" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Foreground="LightGray" Loaded="Window_Loaded" d:DesignHeight="490" d:DesignWidth="614" SizeToContent="WidthAndHeight">
+        Title="NDS Toolkit" WindowStartupLocation="CenterScreen" WindowState="Normal" ResizeMode="CanMinimize" Icon="/NDS%20Toolkit;component/programico.ico" Margin="0" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Foreground="LightGray" d:DesignHeight="490" d:DesignWidth="614" SizeToContent="WidthAndHeight">
     <Window.Resources>
         <ControlTemplate x:Key="GlassButton" TargetType="{x:Type Button}">
             <ControlTemplate.Resources>
@@ -152,7 +152,7 @@
                 <Grid HorizontalAlignment="Stretch" Name="grid2" VerticalAlignment="Stretch">
                     <GroupBox Header="File Dumps" Height="85" HorizontalAlignment="Left" Name="groupBox1" VerticalAlignment="Top" Width="570" Margin="2,0,0,0" Foreground="LightGray" FontFamily="Segoe UI" FontWeight="Bold">
                         <Grid>
-                            <TextBox Height="23" HorizontalAlignment="Left" Margin="6,6,0,0" Name="FileOneRead" VerticalAlignment="Top" Width="465" IsReadOnly="True" FontFamily="Courier New" FontSize="11.5" BorderThickness="2" FontWeight="Normal" BorderBrush="DarkGray" TextChanged="TextBox_TextChanged">
+                            <TextBox Height="23" HorizontalAlignment="Left" Margin="6,6,0,0" Name="FileOneRead" VerticalAlignment="Top" Width="465" IsReadOnly="True" FontFamily="Courier New" FontSize="11.5" BorderThickness="2" FontWeight="Normal" BorderBrush="DarkGray">
                                 <TextBox.Background>
                                     <LinearGradientBrush>
                                         <GradientStop Color="LightGray" Offset="0" />
@@ -160,7 +160,7 @@
                                     </LinearGradientBrush>
                                 </TextBox.Background>
                             </TextBox>
-                            <TextBox Height="23" HorizontalAlignment="Left" Margin="6,35,0,0" Name="FileTwoRead" VerticalAlignment="Top" Width="465" IsReadOnly="True" FontFamily="Courier New" FontSize="11.5" BorderThickness="2" FontWeight="Normal" BorderBrush="DarkGray" TextChanged="TextBox_TextChanged">
+                            <TextBox Height="23" HorizontalAlignment="Left" Margin="6,35,0,0" Name="FileTwoRead" VerticalAlignment="Top" Width="465" IsReadOnly="True" FontFamily="Courier New" FontSize="11.5" BorderThickness="2" FontWeight="Normal" BorderBrush="DarkGray">
                                 <TextBox.Background>
                                     <LinearGradientBrush>
                                         <GradientStop Color="LightGray" Offset="0" />
@@ -205,10 +205,10 @@
                     </GroupBox>
                     <GroupBox Header="Offset Target" Height="83" HorizontalAlignment="Left" Margin="299,91,0,0" Name="OffsetTarget" VerticalAlignment="Top" Width="273" Foreground="LightGray" FontWeight="Bold">
                         <Grid>
-                            <RadioButton Content="Only Positive" Height="16" HorizontalAlignment="Left" Margin="6,6,0,0" Name="Positive" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
+                            <RadioButton Content="Only Positive" Height="16" HorizontalAlignment="Left" Margin="6,6,0,0" Name="Positive" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" IsChecked="True" />
                             <RadioButton Content="Only Negative" Height="16" HorizontalAlignment="Left" Margin="97,6,0,0" Name="Negative" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
                             <Label Content="Max Pointer Offset:" Height="28" HorizontalAlignment="Left" Margin="0,29,0,0" Name="label4" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
-                            <TextBox Height="21" HorizontalAlignment="Right" Margin="0,31,80,0" Name="MaxOffset" VerticalAlignment="Top" Width="73" CharacterCasing="Upper" MaxLength="8" FontSize="11.5" BorderThickness="2" FontWeight="Normal" FontFamily="Courier New" BorderBrush="DarkGray" KeyDown="HexOnly_KeyDown">
+                            <TextBox Height="21" HorizontalAlignment="Right" Margin="0,31,80,0" Name="MaxOffset" VerticalAlignment="Top" Width="73" CharacterCasing="Upper" MaxLength="8" FontSize="11.5" BorderThickness="2" FontWeight="Normal" FontFamily="Courier New" BorderBrush="DarkGray" KeyDown="HexOnly_KeyDown" Text="00008000">
                                 <TextBox.Background>
                                     <LinearGradientBrush>
                                         <GradientStop Color="LightGray" Offset="0" />
@@ -255,7 +255,7 @@
                             </LinearGradientBrush>
                         </TextBox.Background>
                     </TextBox>
-                    <TextBox AcceptsReturn="True" BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Normal" FontFamily="Courier New" FontSize="11.5" Height="371" HorizontalAlignment="Left" Margin="355,25,0,0" Name="CodeOutput" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="220" IsReadOnly="True" TextChanged="TextBox_TextChanged">
+                    <TextBox AcceptsReturn="True" BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Normal" FontFamily="Courier New" FontSize="11.5" Height="371" HorizontalAlignment="Left" Margin="355,25,0,0" Name="CodeOutput" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="220" IsReadOnly="True" TextChanged="CodeOutput_TextChanged">
                         <TextBox.Background>
                             <LinearGradientBrush>
                                 <GradientStop Color="LightGray" Offset="0" />
@@ -267,7 +267,7 @@
                     <Label Content="Code Output:" Height="28" HorizontalAlignment="Left" Margin="355,0,0,0" Name="label12" VerticalAlignment="Top" Foreground="LightGray" />
                     <GroupBox Header="Operation" Height="100" HorizontalAlignment="Left" Margin="228,16,0,0" Name="groupBox2" VerticalAlignment="Top" Width="121" Foreground="LightGray" FontWeight="Bold">
                         <Grid>
-                            <RadioButton Content="Add" Height="16" HorizontalAlignment="Left" Margin="6,3,0,0" Name="CodeAdd" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
+                            <RadioButton Content="Add" Height="16" HorizontalAlignment="Left" Margin="6,3,0,0" Name="CodeAdd" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" IsChecked="True" />
                             <RadioButton Content="Sub" Height="16" HorizontalAlignment="Left" Margin="66,3,0,0" Name="CodeSub" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
                             <TextBox BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" FontWeight="Normal" Height="21" HorizontalAlignment="Left" Margin="18,50,0,0" MaxLength="8" Name="CodeOffset" VerticalAlignment="Top" Width="73" KeyDown="HexOnly_KeyDown">
                                 <TextBox.Background>
@@ -306,7 +306,7 @@
                             <Button BorderBrush="DarkGray" Content="Copy" FontWeight="Normal" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="80,347,0,0" Name="LoopCopy" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="65" Click="LoopCopy_Click" />
                             <Button BorderBrush="DarkGray" Content="Clear" FontWeight="Normal" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="157,347,0,0" Name="LoopClear" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="65" Click="LoopClear_Click" />
                             <Label Content="Code Output:" Height="28" HorizontalAlignment="Left" Margin="2,127,0,0" Name="label20" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
-                            <TextBox BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" FontWeight="Normal" Height="21" Margin="85,7,2,0" MaxLength="17" Name="LoopBase" VerticalAlignment="Top" KeyDown="HexOnly_KeyDown" TextChanged="TextBox_TextChanged">
+                            <TextBox BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" FontWeight="Normal" Height="21" Margin="85,7,2,0" MaxLength="17" Name="LoopBase" VerticalAlignment="Top" KeyDown="HexOnly_KeyDown" TextChanged="LoopBase_TextChanged">
                                 <TextBox.Background>
                                     <LinearGradientBrush>
                                         <GradientStop Color="LightGray" Offset="0" />
@@ -378,7 +378,7 @@
                             </LinearGradientBrush>
                         </TextBox.Background>
                     </TextBox>
-                    <TextBox AcceptsReturn="True" BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Normal" FontFamily="Courier New" FontSize="11.5" Height="371" HorizontalAlignment="Left" IsReadOnly="True" Margin="355,25,0,0" Name="txtCodeOutput" TextChanged="TextBox_TextChanged" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="220">
+                    <TextBox AcceptsReturn="True" BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Normal" FontFamily="Courier New" FontSize="11.5" Height="371" HorizontalAlignment="Left" IsReadOnly="True" Margin="355,25,0,0" Name="txtCodeOutput" TextChanged="LoopBase_TextChanged" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="220">
                         <TextBox.Background>
                             <LinearGradientBrush>
                                 <GradientStop Color="LightGray" Offset="0" />

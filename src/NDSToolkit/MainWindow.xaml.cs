@@ -35,14 +35,6 @@ namespace NDSToolkit
         }
 
         #region Misc
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            CodeAdd.IsChecked = true; 
-            Positive.IsChecked = true;
-            int DefaultOffset = 0x8000;
-            MaxOffset.Text = DefaultOffset.ToString("X8");
-        }
-
         private void ExitMenu_Click(object sender, RoutedEventArgs e)
         {
             this.Close(); 
@@ -88,51 +80,20 @@ namespace NDSToolkit
 
             return final.Length % 16 == 0 && Valid_Code(final, @"[0-9a-fA-F]+");
         }
+        #endregion
 
-        private string getCodeType()
-        {
-            int hc = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
-
-            //get the code type based on the Hex Value input
-            int ct = hc >= 0 && hc <= 255
-                     ? 2
-                     : hc > 255 && hc <= 65535
-                       ? 1
-                       : 0;
-
-            return ct.ToString("X");
-        }
-
+        #region GlobalEvents
         private void HexOnly_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key >= Key.A && e.Key <= Key.F ||
-                e.Key >= Key.D0 && e.Key <= Key.D9 ||
-                e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9)
-                e.Handled = false;
-            else e.Handled = true;
+            e.Handled = !(e.Key >= Key.A && e.Key <= Key.F ||
+                          e.Key >= Key.D0 && e.Key <= Key.D9 ||
+                          e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9);
         }
 
         private void DecOnly_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key >= Key.D0 && e.Key <= Key.D9 ||
-                e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9)
-                e.Handled = false;
-            else e.Handled = true;
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            //Loop Code Generator 
-            if (LoopBase.Text.Length == 8) 
-            {
-                LoopBase.Text += " ";
-                LoopBase.SelectionStart = 10;
-            }
-
-            //CodePorter; elixirdream's requested feature 
-            if (!String.IsNullOrEmpty(CodeOutput.Text))
-                CodeOutput.IsReadOnly = false;
-            else CodeOutput.IsReadOnly = true; 
+            e.Handled = !(e.Key >= Key.D0 && e.Key <= Key.D9 ||
+                          e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9);
         }
         #endregion
 
@@ -388,9 +349,31 @@ namespace NDSToolkit
             
             PtARDS.Text = ptrCode.ToString();
         }
+
+        /** Pointer Searcher Helper Functions **/
+
+        private string getCodeType()
+        {
+            int hc = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
+
+            //get the code type based on the Hex Value input
+            int ct = hc >= 0 && hc <= 255
+                     ? 2
+                     : hc > 255 && hc <= 65535
+                       ? 1
+                       : 0;
+
+            return ct.ToString("X");
+        }
         #endregion
 
         #region CodePorter
+        private void CodeOutput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //elixirdream's requested feature 
+            CodeOutput.IsReadOnly = String.IsNullOrEmpty(CodeOutput.Text);
+        }
+
         private void CodePort_Click(object sender, RoutedEventArgs e)
         {
             string Ported = "";
@@ -509,6 +492,16 @@ namespace NDSToolkit
         #endregion
 
         #region LoopCodeGenerator
+        private void LoopBase_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //Loop Code Generator 
+            if (LoopBase.Text.Length == 8) 
+            {
+                LoopBase.Text += " ";
+                LoopBase.SelectionStart = 10;
+            }
+        }
+
         private void LoopGen_Click(object sender, RoutedEventArgs e)
         {
             bool run = true;
