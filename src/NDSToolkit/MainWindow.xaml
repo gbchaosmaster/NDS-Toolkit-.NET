@@ -1,4 +1,4 @@
-﻿<Window x:Class="NDS_Toolkit.MainWindow"
+﻿<Window x:Class="NDSToolkit.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="NDS Toolkit" WindowStartupLocation="CenterScreen" WindowState="Normal" ResizeMode="CanMinimize" Icon="/NDS%20Toolkit;component/programico.ico" Margin="0" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Foreground="LightGray" Loaded="Window_Loaded" d:DesignHeight="490" d:DesignWidth="614" SizeToContent="WidthAndHeight">

@@ -1,4 +1,4 @@
-﻿namespace NDS_Toolkit
+﻿namespace NDSToolkit
 {
     partial class AboutBox
     {

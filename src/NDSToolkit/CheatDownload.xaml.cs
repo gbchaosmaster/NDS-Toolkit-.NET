@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
 
-namespace NDS_Toolkit
+namespace NDSToolkit
 {
     /// <summary>
     /// Interaction logic for CheatDownload.xaml

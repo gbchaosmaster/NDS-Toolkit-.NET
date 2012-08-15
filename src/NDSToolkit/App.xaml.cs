@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace NDS_Toolkit
+namespace NDSToolkit
 {
     /// <summary>
     /// Interaction logic for App.xaml

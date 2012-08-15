@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace NDS_Toolkit
+namespace NDSToolkit
 {
     partial class AboutBox : Form
     {

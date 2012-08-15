@@ -9,7 +9,7 @@ using System.Windows.Input;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
 
-namespace NDS_Toolkit
+namespace NDSToolkit
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

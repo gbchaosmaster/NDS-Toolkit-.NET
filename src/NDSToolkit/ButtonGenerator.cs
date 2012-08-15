@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Controls;
 
-namespace NDS_Toolkit
+namespace NDSToolkit
 {
     class ButtonGenerator
     {
