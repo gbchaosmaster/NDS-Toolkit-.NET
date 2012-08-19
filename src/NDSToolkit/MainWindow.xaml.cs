@@ -207,7 +207,7 @@ namespace NDSToolkit
             //auto-fill the address box if the name of the .bin file is of the
             //format FileName-XXXXXXXX.bin
             string last8 = filename.Substring(filename.IndexOf(".bin") - 8, 8);
-            AddressTwo.Text = RegexMatches(last8, @"[0-9A-F]{8}") ? last8.ToUpper() : "";
+            address.Text = RegexMatches(last8, @"[0-9A-F]{8}") ? last8.ToUpper() : "";
         }
 
         private void PointerSearch_Click(object sender, RoutedEventArgs e)
