@@ -1,0 +1,68 @@
+#!/usr/bin/env ruby
+
+# Set the working directory to the project's main directory.
+Dir.chdir "../../src/NDSToolkit"
+
+# Source code files to be edited:
+MAIN_XML, MAIN_SRC = "MainWindow.xaml", "MainWindow.xaml.cs"
+
+# Unless both of the above files exist, error and exit.
+unless File.exist?(MAIN_XML) && File.exist?(MAIN_SRC)
+  puts "The following files could not be found:"
+  puts [MAIN_XML, MAIN_SRC].reject { |f| File.exists? f }
+  exit
+end
+
+title = ARGV[0] || ""
+
+loop do
+  # Get the page title.
+  until title[/^.+$/]
+    print "Enter the title of the page to generate: "
+    title = STDIN.gets.strip
+
+    puts "Invalid title." unless title[/^.+$/]
+  end
+
+  print "\
+You have chosen the page title: #{title}
+Is this acceptable? [y] "
+
+  choice = STDIN.gets.strip
+
+  # Unless they press N, off we go.
+  break unless choice.downcase == "n"
+
+  # If they did press N, reset and try again.
+  title = ""
+  puts
+end
+
+print "\nModifying files... "
+
+# Read both files.
+xml_contents = IO.readlines MAIN_XML
+src_contents = IO.readlines MAIN_SRC
+
+# Modify both contents.
+xml_contents = xml_contents.insert(
+  # Search for the closing tag for the TabControl.
+  xml_contents.index(" " * 8 + "</TabControl>\n"),
+  "#{" " * 12}<TabItem Header=\"#{title}\" />\n"
+)
+src_contents = src_contents.insert(
+  # Search for an #endregion, starting at the end of the file.
+  src_contents.size - src_contents.reverse.index(" " * 8 + "#endregion\n"),
+  "\n#{" " * 8}#region #{title.gsub /\s+/, ""}\n#{" " * 8}#endregion\n"
+)
+
+# Write both files.
+File.open(MAIN_XML, "w") { |f| f << xml_contents.join }
+File.open(MAIN_SRC, "w") { |f| f << src_contents.join }
+
+# Finish-up message:
+print "\
+Finished!
+2 files modified, 4 insertions.
+"
+
