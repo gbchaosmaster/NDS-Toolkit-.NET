@@ -1,57 +1,38 @@
 ﻿using System;
 using System.IO;
-using System.Data;
 using System.Globalization;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Windows;
-using Microsoft.Win32;
-using System.Reflection;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Text.RegularExpressions;
+using Microsoft.Win32;
 
-namespace NDS_Toolkit
+namespace NDSToolkit
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        long Length1 = 0, Length2 = 0;
-
         //File Dialogs
         OpenFileDialog openFileOne = new OpenFileDialog();
         OpenFileDialog openFileTwo = new OpenFileDialog();
 
         //Code types
-        string D2 = "D2000000 00000000";
-        string DC = "DC000000 ", C0 = "C0000000 ";
-        string D4 = "D4000000 ", D5 = "D5000000 ";
-        string D6 = "D6000000 ", D7 = "D7000000 ";
-        string D8 = "D8000000 "; 
+        const string D2 = "D2000000 00000000";
+        const string DC = "DC000000 ", C0 = "C0000000 ";
+        const string D4 = "D4000000 ", D5 = "D5000000 ";
+        const string D6 = "D6000000 ", D7 = "D7000000 ";
+        const string D8 = "D8000000 "; 
 
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        #region Misc
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            CodeAdd.IsChecked = true; 
-            Positive.IsChecked = true;
-            int DefaultOffset = 0x8000;
-            MaxOffset.Text = DefaultOffset.ToString("X8");
-        }
-
+        #region MenuItems
         private void ExitMenu_Click(object sender, RoutedEventArgs e)
         {
             this.Close(); 
@@ -59,23 +40,19 @@ namespace NDS_Toolkit
 
         private void AboutMenu_Click(object sender, RoutedEventArgs e)
         {
-            AboutBox1 box = new AboutBox1();
-            box.ShowDialog();
+            new AboutBox().Show();
         }
 
         private void CheatMenu_Click(object sender, RoutedEventArgs e)
         {
-            Window1 window = new Window1();
-            window.Show();
+            new CheatDownload().Show();
         }
         #endregion
 
         #region GlobalFunctions
-        private bool Valid_Code(string Code, string Pattern)
+        private bool Valid_Code(string code, string pattern)
         {
-            if (Regex.IsMatch(Code, Pattern, RegexOptions.IgnoreCase))
-                return true;
-            else return false;
+            return Regex.IsMatch(code, pattern, RegexOptions.IgnoreCase);
         }
 
         private bool Verify(string code)
@@ -99,65 +76,20 @@ namespace NDS_Toolkit
 
             return final.Length % 16 == 0 && Valid_Code(final, @"[0-9a-fA-F]+");
         }
+        #endregion
 
-        private string ctFxn(int ct)
-        {
-            int hc = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
-
-            //get the code type based on the Hex Value input
-            ct = hc >= 0 && hc <= 255 ? 2 :
-                hc > 255 && hc <= 65535 ? 1 : 0;
-            return ct.ToString("X");
-        }
-
+        #region GlobalEvents
         private void HexOnly_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key >= Key.A && e.Key <= Key.F ||
-                e.Key >= Key.D0 && e.Key <= Key.D9 ||
-                e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9)
-                e.Handled = false;
-            else e.Handled = true;
+            e.Handled = !(e.Key >= Key.A && e.Key <= Key.F ||
+                          e.Key >= Key.D0 && e.Key <= Key.D9 ||
+                          e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9);
         }
 
         private void DecOnly_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key >= Key.D0 && e.Key <= Key.D9 ||
-                e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9)
-                e.Handled = false;
-            else e.Handled = true;
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            //Loop Code Generator 
-            if (LoopBase.Text.Length == 8) 
-            {
-                LoopBase.Text += " ";
-                LoopBase.SelectionStart = 10;
-            }
-
-            //Helder's requested Pointer feature
-            if (!String.IsNullOrEmpty(FileOneRead.Text) && !String.IsNullOrEmpty(FileTwoRead.Text))
-            {
-                string ReadToAddy1 = FileOneRead.Text.Substring(FileOneRead.Text.IndexOf(".bin") - 8, 8);
-                string ReadToAddy2 = FileTwoRead.Text.Substring(FileTwoRead.Text.IndexOf(".bin") - 8, 8);
-
-                if (Valid_Code(ReadToAddy1, "[0-F]{8}") && Valid_Code(ReadToAddy2, "[0-F]{8}"))
-                {
-                    AddressOne.Text = ReadToAddy1;
-                    AddressTwo.Text = ReadToAddy2;
-                }
-                else
-                {
-                    AddressOne.Clear();
-                    AddressTwo.Clear();
-                }
-            }
-
-            //CodePorter; elixirdream's requested feature 
-            if (!String.IsNullOrEmpty(CodeOutput.Text))
-                CodeOutput.IsReadOnly = false;
-            else CodeOutput.IsReadOnly = true; 
+            e.Handled = !(e.Key >= Key.D0 && e.Key <= Key.D9 ||
+                          e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9);
         }
         #endregion
 
@@ -235,26 +167,35 @@ namespace NDS_Toolkit
         #endregion
 
         #region PointerSearcher
+        const string binFilter = "Binary Files (*.bin)|*.bin|All Files (*.*)|*.*";
+
+        long Length1 = 0, Length2 = 0;
+
         private void FileOne_Click(object sender, RoutedEventArgs e)
         {
-            openFileOne.Filter = "Binary file (*.bin)|*.bin";
+            openFileOne.Filter = binFilter;
 
             if ((openFileOne.ShowDialog() == true) && (openFileOne.OpenFile() != null))
             {
-                FileOneRead.Text = System.IO.Path.GetFileName(openFileOne.FileName);
+                FileOneRead.Text = Path.GetFileName(openFileOne.FileName);
                 Length1 = openFileOne.OpenFile().Length;
             }
-        }
 
+            string ReadToAddy1 = FileOneRead.Text.Substring(FileOneRead.Text.IndexOf(".bin") - 8, 8);
+            AddressOne.Text = Valid_Code(ReadToAddy1, "[0-F]{8}") ? ReadToAddy1 : "";
+        }
         private void FileTwo_Click(object sender, RoutedEventArgs e)
         {
-            openFileTwo.Filter = "Binary file (*.bin)|*.bin";
+            openFileTwo.Filter = binFilter;
 
             if ((openFileTwo.ShowDialog() == true) && (openFileTwo.OpenFile() != null))
             {
-                FileTwoRead.Text = System.IO.Path.GetFileName(openFileTwo.FileName);
+                FileTwoRead.Text = Path.GetFileName(openFileTwo.FileName);
                 Length2 = openFileTwo.OpenFile().Length;
             }
+
+            string ReadToAddy2 = FileTwoRead.Text.Substring(FileTwoRead.Text.IndexOf(".bin") - 8, 8);
+            AddressTwo.Text = Valid_Code(ReadToAddy2, "[0-F]{8}") ? ReadToAddy2 : "";
         }
 
         private void PointerSearch_Click(object sender, RoutedEventArgs e)
@@ -328,16 +269,25 @@ namespace NDS_Toolkit
                     ptrResults.Items.Add(String.Format("0x{0:X8} : 0x{1:X8} :: 0x{2:X8}",
                                                    i + 0x02000000, Addy1 - Offset1, Offset1));
             }
+
+            if (ptrResults.Items.Count == 0)
+            {
+                MessageBox.Show(this, "No results were found.", "No Results",
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
   
             /*Smallest = smallest value, 
              *SmallestAddy1 = smallest address 1
              */
 
-            int ct = 0, Smallest = 0;
-            string SmallestAddy1 = "";
+            int SmallestIndex = 0;
+            int SmallestOffset = 0;
 
-            foreach (string Address in ptrResults.Items)
+            for (int i = 0; i < ptrResults.Items.Count; ++i)
             {
+                string Address = ptrResults.Items[i].ToString();
+
                 //make sure we didn't grab a blank
                 if (Address.Trim() == "")
                     continue;
@@ -347,77 +297,80 @@ namespace NDS_Toolkit
                                     NumberStyles.AllowHexSpecifier);
 
                 //if the result is the best so far, save some data about it
-                if (Smallest == 0 || SmallCheck < Smallest)
+                if (SmallestOffset == 0 || SmallCheck < SmallestOffset)
                 {
-                    Smallest = SmallCheck;
-                    SmallestAddy1 = Address.Substring(3, 7);
+                    SmallestIndex = i;
+                    SmallestOffset = SmallCheck;
                 }
             }
 
-            ptrCode.Append(String.Format("6{0} 00000000\nB{0} 00000000\n",
-                                         SmallestAddy1));
-            ptrCode.Append(
-                //negative?
-                Smallest < 0
-                ? String.Format(
-                    "DC000000 {0:X8}\n" +
-                    "{1:X}8000000 {2:X8}\n" +
-                    "D2000000 00000000",
-                    Smallest - 0x08000000,
-                    ctFxn(ct), hc
-                 )
-                 : String.Format(
-                     "{0:X}{1:X7} {2:X8}\n" +
-                     "D2000000 00000000",
-                     ctFxn(ct),
-                     Smallest, hc
-                 )
-            );
-
-            PtARDS.Text = ptrCode.ToString();
+            //select the smallest one and focus on the listbox
+            //this selection change will trigger the event that gets the pointer code
+            ptrResults.SelectedIndex = SmallestIndex;
+            ptrResults.Focus();
         }
 
         private void ptrResults_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            string ptrLine = ptrResults.SelectedItem.ToString();
+            setPtrCode(ptrLine.Substring(3, 7), ptrLine.Substring(29, 8));
+        }
+
+        private void setPtrCode(string addressStr, string offsetStr)
+        {
+            StringBuilder ptrCode = new StringBuilder();
+
+            int hc = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
+            int address = int.Parse(addressStr, NumberStyles.AllowHexSpecifier);
+            int offset = int.Parse(offsetStr, NumberStyles.AllowHexSpecifier);
+
+            ptrCode.Append(String.Format("6{0:X7} 00000000\nB{0:X7} 00000000\n", address));
+            ptrCode.Append(
+                offset < 0
+                //negative offset
+                ? String.Format(
+                "DC000000 {0:X8}\n" +
+                "{1:X}8000000 {2:X8}\n" +
+                "D2000000 00000000",
+                offset - 0x08000000,
+                getCodeType(), hc
+                )
+                //positive offset
+                : String.Format(
+                "{0:X}{1:X7} {2:X8}\n" +
+                "D2000000 00000000",
+                getCodeType(),
+                offset, hc
+                )
+            );
+            
+            PtARDS.Text = ptrCode.ToString();
+        }
+
+        /** Pointer Searcher Helper Functions **/
+
+        private string getCodeType()
+        {
             int hc = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
 
-            if (ptrResults.SelectedIndex > -1)
-            {
-                int ct = 0;
-                StringBuilder ptrCode = new StringBuilder();
-                string ptrLine = ptrResults.SelectedItem.ToString();
+            //get the code type based on the Hex Value input
+            int ct = hc >= 0 && hc <= 255
+                     ? 2
+                     : hc > 255 && hc <= 65535
+                       ? 1
+                       : 0;
 
-                //fetch the address and offset from the selected line
-                int smAddy = int.Parse(ptrLine.Substring(3, 7),
-                                NumberStyles.AllowHexSpecifier);
-                int offset = int.Parse(ptrLine.Substring(29, 8),
-                                NumberStyles.AllowHexSpecifier);
-
-                ptrCode.Append(String.Format("6{0:X7} 00000000\nB{0:X7} 00000000\n", smAddy));
-                ptrCode.Append(
-                    //negative?
-                    offset < 0
-                    ? String.Format(
-                    "DC000000 {0:X8}\n" +
-                    "{1:X}8000000 {2:X8}\n" +
-                    "D2000000 00000000",
-                    offset - 0x08000000,
-                    ctFxn(ct), hc
-                    )
-                    : String.Format(
-                    "{0:X}{1:X7} {2:X8}\n" +
-                    "D2000000 00000000",
-                    ctFxn(ct),
-                    offset, hc
-                    )
-                );
-                
-                PtARDS.Text = ptrCode.ToString();
-            }
+            return ct.ToString("X");
         }
         #endregion
 
         #region CodePorter
+        private void CodeOutput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //elixirdream's requested feature 
+            CodeOutput.IsReadOnly = String.IsNullOrEmpty(CodeOutput.Text);
+        }
+
         private void CodePort_Click(object sender, RoutedEventArgs e)
         {
             string Ported = "";
@@ -536,6 +489,16 @@ namespace NDS_Toolkit
         #endregion
 
         #region LoopCodeGenerator
+        private void LoopBase_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //Loop Code Generator 
+            if (LoopBase.Text.Length == 8) 
+            {
+                LoopBase.Text += " ";
+                LoopBase.SelectionStart = 10;
+            }
+        }
+
         private void LoopGen_Click(object sender, RoutedEventArgs e)
         {
             bool run = true;
