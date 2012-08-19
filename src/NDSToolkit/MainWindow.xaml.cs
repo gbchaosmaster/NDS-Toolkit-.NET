@@ -51,7 +51,6 @@ namespace NDSToolkit
 
         #region GlobalFunctions
         private int HexStrToInt(string str)
-
         {
             return int.Parse(str, NumberStyles.AllowHexSpecifier);
         }
@@ -477,12 +476,10 @@ namespace NDSToolkit
             bool run = true;
             string check = "";
 
-            string TempCount = Convert.ToInt32(LoopCount.Text).ToString("X8");
-            int HalfOffset = HexStrToInt(LoopOffset.Text);
-            string FullOffset = HalfOffset.ToString("X8");
+            string FullOffset = HexStrToInt(LoopOffset.Text).ToString("X8");
 
             //get the correct block offset by subtracting 1 and convert it to hex string
-            string ConvCount = (HexStrToInt(TempCount) - 1).ToString("X8");
+            string ConvCount = (Convert.ToInt32(LoopCount.Text) - 1).ToString("X8");
 
             //check the offset
             switch (HexStrToInt(LoopOffset.Text))
@@ -510,12 +507,14 @@ namespace NDSToolkit
             }
             else if (run)
             {
-                string BaseAddy = LoopBase.Text.Substring(0, 8); //grab the address
-                string BaseValy = LoopBase.Text.Substring(9, 8); //grab the value
-
                 if (LoopBase.Text[0] == '0')
                 {
-                    LoopOutput.Text = D5 + BaseValy + '\n' + C0 + ConvCount + '\n' + check + BaseAddy + '\n';
+                    LoopOutput.Text = String.Format(
+                        "{0}{1}\n{2}{3}\n{4}{5}\n",
+                        D5, LoopBase.Text.Substring(9, 8),
+                        C0, ConvCount,
+                        check, LoopBase.Text.Substring(0, 8)
+                    );
 
                     LoopOutput.Text += !String.IsNullOrEmpty(LoopInc.Text)
                                        //if there's text in the increment textbox, add the value increment.
