@@ -455,52 +455,6 @@ namespace NDSToolkit
         }
         #endregion
 
-        #region PatchCodeBuilder
-        private void PatchBuild_Click(object sender, RoutedEventArgs e)
-        {
-            PatchInput.Text = PatchInput.Text.Trim();
-            StringBuilder pb = new StringBuilder();
-            String[] PatchCode = PatchInput.Text.Split(new String[] { Environment.NewLine }, StringSplitOptions.None);
-
-            //multiply number of lines by 4 to get the offset
-            int CodeOffset = PatchInput.LineCount * 4;
-
-            string CodeAddress = PatchCode[0].Substring(1, 8);
-            pb.Append("E" + CodeAddress + CodeOffset.ToString("X8") + '\n');
-
-            for (int i = 0; i < PatchCode.Length; ++i)
-            {
-                string CodeValues = PatchCode[i].Substring(9, 8);
-
-                if (i % 2 == 0)
-                    pb.Append(CodeValues + " ");
-                else
-                    pb.Append(CodeValues + '\n');
-            }
-
-            if (PatchInput.LineCount % 2 != 0)
-                pb.Append("00000000");
-
-            PatchOutput.Text = pb.ToString();
-        }
-
-        private void PatchPaste_Click(object sender, RoutedEventArgs e)
-        {
-            PatchInput.Paste();
-        }
-
-        private void PatchCopy_Click(object sender, RoutedEventArgs e)
-        {
-            Clipboard.SetText(PatchOutput.Text);
-        }
-
-        private void PatchClear_Click(object sender, RoutedEventArgs e)
-        {
-            PatchInput.Clear();
-            PatchOutput.Clear();
-        }
-        #endregion
-
         #region LoopCodeGenerator
         private void LoopBase_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -597,6 +551,52 @@ namespace NDSToolkit
                     txtFields.Clear();
                 }
             }
+        }
+        #endregion
+
+        #region PatchCodeBuilder
+        private void PatchBuild_Click(object sender, RoutedEventArgs e)
+        {
+            PatchInput.Text = PatchInput.Text.Trim();
+            StringBuilder pb = new StringBuilder();
+            String[] PatchCode = PatchInput.Text.Split(new String[] { Environment.NewLine }, StringSplitOptions.None);
+
+            //multiply number of lines by 4 to get the offset
+            int CodeOffset = PatchInput.LineCount * 4;
+
+            string CodeAddress = PatchCode[0].Substring(1, 8);
+            pb.Append("E" + CodeAddress + CodeOffset.ToString("X8") + '\n');
+
+            for (int i = 0; i < PatchCode.Length; ++i)
+            {
+                string CodeValues = PatchCode[i].Substring(9, 8);
+
+                if (i % 2 == 0)
+                    pb.Append(CodeValues + " ");
+                else
+                    pb.Append(CodeValues + '\n');
+            }
+
+            if (PatchInput.LineCount % 2 != 0)
+                pb.Append("00000000");
+
+            PatchOutput.Text = pb.ToString();
+        }
+
+        private void PatchPaste_Click(object sender, RoutedEventArgs e)
+        {
+            PatchInput.Paste();
+        }
+
+        private void PatchCopy_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(PatchOutput.Text);
+        }
+
+        private void PatchClear_Click(object sender, RoutedEventArgs e)
+        {
+            PatchInput.Clear();
+            PatchOutput.Clear();
         }
         #endregion
 
