@@ -180,6 +180,7 @@ namespace NDSToolkit
             {
                 FileOneRead.Text = Path.GetFileName(openFileOne.FileName);
                 Length1 = openFileOne.OpenFile().Length;
+                ParseFileName(FileOneRead.Text, AddressOne);
             }
 
             ParseFileName(FileOneRead.Text, AddressOne);
@@ -192,6 +193,7 @@ namespace NDSToolkit
             {
                 FileTwoRead.Text = Path.GetFileName(openFileTwo.FileName);
                 Length2 = openFileTwo.OpenFile().Length;
+                ParseFileName(FileTwoRead.Text, AddressTwo);
             }
 
             ParseFileName(FileTwoRead.Text, AddressTwo);
