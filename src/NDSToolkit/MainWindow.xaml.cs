@@ -50,9 +50,9 @@ namespace NDSToolkit
         #endregion
 
         #region GlobalFunctions
-        private bool Valid_Code(string code, string pattern)
+        private bool RegexMatches(string str, string re)
         {
-            return Regex.IsMatch(code, pattern, RegexOptions.IgnoreCase);
+            return Regex.IsMatch(str, re, RegexOptions.IgnoreCase);
         }
 
         private bool Verify(string code)
@@ -74,7 +74,7 @@ namespace NDSToolkit
                 "\n", lines
             ).Replace(" ", "").Replace("\t", "").Replace("\n", "").Replace("\r", "");
 
-            return final.Length % 16 == 0 && Valid_Code(final, @"[0-9a-fA-F]+");
+            return final.Length % 16 == 0 && RegexMatches(final, @"[0-9A-F]+");
         }
         #endregion
 
@@ -201,7 +201,7 @@ namespace NDSToolkit
             //auto-fill the address box if the name of the .bin file is of the
             //format FileName-XXXXXXXX.bin
             string last8 = filename.Substring(filename.IndexOf(".bin") - 8, 8);
-            AddressTwo.Text = Valid_Code(last8, "[0-F]{8}") ? last8.ToUpper() : "";
+            AddressTwo.Text = RegexMatches(last8, @"[0-9A-F]{8}") ? last8.ToUpper() : "";
         }
 
         private void PointerSearch_Click(object sender, RoutedEventArgs e)
@@ -404,8 +404,8 @@ namespace NDSToolkit
 
             foreach (string line in CodeInput.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
             {
-                if (Valid_Code(line, @"[0-F]{8}\s[0-F]{8}") &&
-                    !Valid_Code(line, @"[CD][0-2C4-5]0{6}\s[0-F]{8}|[3-A]4[0-F]{6}\s[0-F]{8}|927[0-F]{5}\s[0-F]{8}"))
+                if (RegexMatches(line, @"[0-9A-F]{8}\s+[0-9A-F]{8}") &&
+                    !RegexMatches(line, @"[CD][C0-24-5]0{6}\s+[0-9A-F]{8}|[3-9A]4[0-9A-F]{6}\s+[0-9A-F]{8}|927[0-9A-F]{5}\s+[0-9A-F]{8}"))
                 {
                     string AddyOnly = line.Substring(0, 8);
                     string ValyOnly = line.Substring(9, 8);
@@ -413,7 +413,7 @@ namespace NDSToolkit
                     int ValyConvert = int.Parse(ValyOnly, NumberStyles.AllowHexSpecifier);
                     int OffyConvert = int.Parse(CodeOffset.Text, NumberStyles.AllowHexSpecifier);
 
-                    if (Valid_Code(line, @"D[36-B]0{6}\s[0-F]{8}")) //Dx Lines
+                    if (RegexMatches(line, @"D[36-9A-B]0{6}\s+[0-9A-F]{8}")) //Dx Lines
                     {
                         Ported = CodeAdd.IsChecked == true ? (ValyConvert + OffyConvert).ToString("X8") :
                             (ValyConvert - OffyConvert).ToString("X8");
