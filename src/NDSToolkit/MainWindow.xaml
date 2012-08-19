@@ -306,7 +306,7 @@
                             <Button BorderBrush="DarkGray" Content="Copy" FontWeight="Normal" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="80,347,0,0" Name="LoopCopy" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="65" Click="LoopCopy_Click" />
                             <Button BorderBrush="DarkGray" Content="Clear" FontWeight="Normal" Foreground="#FFFFFFFF" Height="23" HorizontalAlignment="Left" Margin="157,347,0,0" Name="LoopClear" Template="{DynamicResource GlassButton}" VerticalAlignment="Top" Width="65" Click="LoopClear_Click" />
                             <Label Content="Code Output:" Height="28" HorizontalAlignment="Left" Margin="2,127,0,0" Name="label20" VerticalAlignment="Top" Foreground="LightGray" FontWeight="Normal" />
-                            <TextBox BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" FontWeight="Normal" Height="21" Margin="85,7,2,0" MaxLength="17" Name="LoopBase" VerticalAlignment="Top" KeyDown="HexOnly_KeyDown" TextChanged="LoopBase_TextChanged">
+                            <TextBox BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Upper" FontFamily="Courier New" FontSize="11.5" FontWeight="Normal" Height="21" Margin="85,7,2,0" MaxLength="17" Name="LoopBase" VerticalAlignment="Top" KeyDown="LoopBase_KeyDown">
                                 <TextBox.Background>
                                     <LinearGradientBrush>
                                         <GradientStop Color="LightGray" Offset="0" />
@@ -378,7 +378,7 @@
                             </LinearGradientBrush>
                         </TextBox.Background>
                     </TextBox>
-                    <TextBox AcceptsReturn="True" BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Normal" FontFamily="Courier New" FontSize="11.5" Height="371" HorizontalAlignment="Left" IsReadOnly="True" Margin="355,25,0,0" Name="txtCodeOutput" TextChanged="LoopBase_TextChanged" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="220">
+                    <TextBox AcceptsReturn="True" BorderBrush="DarkGray" BorderThickness="2" CharacterCasing="Normal" FontFamily="Courier New" FontSize="11.5" Height="371" HorizontalAlignment="Left" IsReadOnly="True" Margin="355,25,0,0" Name="txtCodeOutput" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="220">
                         <TextBox.Background>
                             <LinearGradientBrush>
                                 <GradientStop Color="LightGray" Offset="0" />

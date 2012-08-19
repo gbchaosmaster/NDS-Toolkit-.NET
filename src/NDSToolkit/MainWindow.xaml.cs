@@ -456,10 +456,16 @@ namespace NDSToolkit
         #endregion
 
         #region LoopCodeGenerator
-        private void LoopBase_TextChanged(object sender, TextChangedEventArgs e)
+        private void LoopBase_KeyDown(object sender, KeyEventArgs e)
         {
-            //Loop Code Generator
-            if (LoopBase.Text.Length == 8)
+            /*KeyDown event on LoopBase to-
+             *1. Make sure only hex digits can be pressed
+             *2. Add a space for the user on after they enter digit 8
+             */
+
+            HexOnly_KeyDown(sender, e);
+
+            if (LoopBase.Text.Length == 8 && e.Key != Key.Back)
             {
                 LoopBase.Text += " ";
                 LoopBase.SelectionStart = 10;
@@ -478,10 +484,8 @@ namespace NDSToolkit
             //get the correct block offset by subtracting 1 and convert it to hex string
             string ConvCount = (HexStrToInt(TempCount) - 1).ToString("X8");
 
-            //check offset
-            int TempOffset = HexStrToInt(LoopOffset.Text);
-
-            switch (TempOffset)
+            //check the offset
+            switch (HexStrToInt(LoopOffset.Text))
             {
                 case 1:
                     check = D8;
