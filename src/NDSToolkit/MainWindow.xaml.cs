@@ -312,8 +312,11 @@ namespace NDSToolkit
 
         private void ptrResults_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string ptrLine = ptrResults.SelectedItem.ToString();
-            setPtrCode(ptrLine.Substring(3, 7), ptrLine.Substring(29, 8));
+            if (ptrResults.SelectedIndex > -1)
+            {
+                string ptrLine = ptrResults.SelectedItem.ToString();
+                setPtrCode(ptrLine.Substring(3, 7), ptrLine.Substring(29, 8));
+            }
         }
 
         private void setPtrCode(string addressStr, string offsetStr)
