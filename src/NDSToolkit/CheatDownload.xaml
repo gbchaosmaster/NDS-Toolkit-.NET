@@ -1,7 +1,7 @@
 ﻿<Window x:Class="NDSToolkit.CheatDownload"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Download Latest Usrcheat" Icon="DownloadIcon.ico" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" d:DesignHeight="181" d:DesignWidth="301" SizeToContent="WidthAndHeight">
+        Title="Download Latest Usrcheat" Icon="/NDS%20Toolkit;component/Icons/DownloadIcon.ico" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" d:DesignHeight="181" d:DesignWidth="301" SizeToContent="WidthAndHeight">
 
     <Window.Resources>
         <ControlTemplate x:Key="GlassButton" TargetType="{x:Type Button}">

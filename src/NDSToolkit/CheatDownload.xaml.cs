@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
@@ -18,7 +19,6 @@ namespace NDSToolkit
         }
 
         const string usrcheat = "http://syntechx.com/downloads/usrcheat.rar";
-
         private byte[] usrcheatDownloaded; //set the current size (in bytes)
         SaveFileDialog saveUsrcheat = new SaveFileDialog();
         private delegate void UpdateProgressBarDelegate(System.Windows.DependencyProperty dp, Object value);
@@ -26,7 +26,6 @@ namespace NDSToolkit
         private void usrcheatDownload(string usrcheat) //connects and tries to download the usrcheat
         {
             Title = "Downloading...";
-
             progressBar1.Value = 0; //empty the progress bar
             usrcheatDownloaded = new byte[0];
 
@@ -70,7 +69,7 @@ namespace NDSToolkit
                         {
                             progressBar1.Value += bytesRead;
                             Dispatcher.Invoke(updatePbDelegate, System.Windows.Threading.DispatcherPriority.Background, 
-                                new object[] { ProgressBar.ValueProperty, progressBar1.Value });
+                                                        new object[] { ProgressBar.ValueProperty, progressBar1.Value });
                         }
                     }
                 }
@@ -82,7 +81,7 @@ namespace NDSToolkit
             catch (System.Exception) //No internet connection? 
             {
                 MessageBox.Show("A problem occurred while trying to download the latest usrcheat. Please check your internet settings and retry.",
-                    "Download Incomplete", MessageBoxButton.OK, MessageBoxImage.Error);
+                                                                                "Download Incomplete", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             Title = "Download Complete";
