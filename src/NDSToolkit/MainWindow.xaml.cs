@@ -523,26 +523,36 @@ namespace NDSToolkit
             int HalfOffset = HexStrToInt(LoopOffset.Text);
             string FullOffset = HalfOffset.ToString("X8");
 
-            //get the correct block offset by subtracting 1 and convert it to hex
-            int nBlock = HexStrToInt(TempCount); nBlock -= 1;
-            string ConvCount = nBlock.ToString("X8");
+            //get the correct block offset by subtracting 1 and convert it to hex string
+            string ConvCount = (HexStrToInt(TempCount) - 1).ToString("X8");
 
             //check offset
             int TempOffset = HexStrToInt(LoopOffset.Text);
 
-            if (TempOffset == 1) check = D8;
-            else if (TempOffset == 2) check = D7;
-            else if (TempOffset == 4) check = D6;
-            else run = false;
+            switch (TempOffset)
+            {
+                case 1:
+                    check = D8;
+                    break;
+                case 2:
+                    check = D7;
+                    break;
+                case 4:
+                    check = D6;
+                    break;
+                default:
+                    run = false;
+                    break;
+            }
 
             //Did the user enter a full code?
-            if (LoopBase.Text.Length != 17)
+            if (!RegexMatches(LoopBase.Text, @"[0-9A-F]{8} [0-9A-F]{8}"))
             {
                 LoopOutput.Clear();
                 MessageBox.Show(this, "Please enter a full code (XXXXXXXX YYYYYYYY).",
                     "Base Code Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            else if (LoopBase.Text.Length == 17 && run)
+            else if (run)
             {
                 string BaseAddy = LoopBase.Text.Substring(0, 8); //grab the address
                 string BaseValy = LoopBase.Text.Substring(9, 8); //grab the value
@@ -551,13 +561,11 @@ namespace NDSToolkit
                 {
                     LoopOutput.Text = D5 + BaseValy + '\n' + C0 + ConvCount + '\n' + check + BaseAddy + '\n';
 
-                    if (!String.IsNullOrEmpty(LoopInc.Text)) //if there's text in the increment textbox, add the value increment.
-                    {
-                        int HalfInc = HexStrToInt(LoopInc.Text);
-                        string FullInc = HalfInc.ToString("X8");
-                        LoopOutput.Text += D4 + FullInc + '\n' + D2;
-                    }
-                    else LoopOutput.Text += D2; //else, don't add the value increment.
+                    LoopOutput.Text += !String.IsNullOrEmpty(LoopInc.Text)
+                                       //if there's text in the increment textbox, add the value increment.
+                                       ? D4 + HexStrToInt(LoopInc.Text).ToString("X8") + '\n' + D2
+                                       //else, don't add the value increment.
+                                       : D2;
                 }
                 else
                 {
@@ -567,7 +575,7 @@ namespace NDSToolkit
                                                                                                 MessageBoxImage.Error);
                 }
             }
-            else if (LoopBase.Text.Length == 17 && !run)
+            else
             {
                 if (LoopBase.Text[0] >= '0' && LoopBase.Text[0] < '3')
                     LoopOutput.Text = C0 + ConvCount + '\n' + LoopBase.Text + '\n' + DC + FullOffset + '\n' + D2;
