@@ -147,16 +147,12 @@ namespace NDSToolkit
                     buttonCodeIO.Clear();
                 }
                 if (elementOne is GroupBox)
-                {
                     foreach (UIElement elementTwo in chkGrid.Children)
-                    {
                         if (elementTwo is CheckBox)
                         {
                             CheckBox buttonChk = (CheckBox)elementTwo;
                             buttonChk.IsChecked = false;
                         }
-                    }
-                }
             }
         }
 
@@ -205,8 +201,11 @@ namespace NDSToolkit
             //Helder's requested Pointer Searcher feature
             //auto-fill the address box if the name of the .bin file is of the
             //format FileName-XXXXXXXX.bin
-            string last8 = filename.Substring(filename.IndexOf(".bin") - 8, 8);
-            address.Text = RegexMatches(last8, @"[0-9A-F]{8}") ? last8.ToUpper() : "";
+            if (!String.IsNullOrEmpty(filename))
+            {
+                string last8 = filename.Substring(filename.IndexOf(".bin") - 8, 8);
+                address.Text = RegexMatches(last8, @"[0-9A-F]{8}") ? last8.ToUpper() : "";
+            }
         }
 
         private void PointerSearch_Click(object sender, RoutedEventArgs e)
@@ -295,7 +294,7 @@ namespace NDSToolkit
             int SmallestIndex = 0;
             int SmallestOffset = 0;
 
-            for (int i = 0; i < ptrResults.Items.Count; ++i)
+            for (int i = 0; i < ptrResults.Items.Count; i++)
             {
                 string Address = ptrResults.Items[i].ToString();
 
@@ -570,7 +569,7 @@ namespace NDSToolkit
             string CodeAddress = PatchCode[0].Substring(1, 8);
             pb.Append("E" + CodeAddress + CodeOffset.ToString("X8") + '\n');
 
-            for (int i = 0; i < PatchCode.Length; ++i)
+            for (int i = 0; i < PatchCode.Length; i++)
             {
                 string CodeValues = PatchCode[i].Substring(9, 8);
 
