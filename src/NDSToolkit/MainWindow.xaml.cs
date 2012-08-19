@@ -50,6 +50,12 @@ namespace NDSToolkit
         #endregion
 
         #region GlobalFunctions
+        private int HexStrToInt(string str)
+
+        {
+            return int.Parse(str, NumberStyles.AllowHexSpecifier);
+        }
+
         private bool RegexMatches(string str, string re)
         {
             return Regex.IsMatch(str, re, RegexOptions.IgnoreCase);
@@ -241,7 +247,7 @@ namespace NDSToolkit
             PtARDS.Clear();
             ptrResults.Items.Clear();
             StringBuilder ptrCode = new StringBuilder();
-            int hc = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
+            int hc = HexStrToInt(HexValue.Text);
             int MaxOffsetTest = int.Parse(MaxOffset.Text, NumberStyles.HexNumber);
             int DesiredOffset = Positive.IsChecked == true ? Math.Abs(MaxOffsetTest) : -Math.Abs(MaxOffsetTest);
 
@@ -329,9 +335,9 @@ namespace NDSToolkit
         {
             StringBuilder ptrCode = new StringBuilder();
 
-            int hc = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
-            int address = int.Parse(addressStr, NumberStyles.AllowHexSpecifier);
-            int offset = int.Parse(offsetStr, NumberStyles.AllowHexSpecifier);
+            int hc = HexStrToInt(HexValue.Text);
+            int address = HexStrToInt(addressStr);
+            int offset = HexStrToInt(offsetStr);
 
             ptrCode.Append(String.Format("6{0:X7} 00000000\nB{0:X7} 00000000\n", address));
             ptrCode.Append(
@@ -360,7 +366,7 @@ namespace NDSToolkit
 
         private string getCodeType()
         {
-            int hc = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
+            int hc = HexStrToInt(HexValue.Text);
 
             //get the code type based on the Hex Value input
             int ct = hc >= 0 && hc <= 255
@@ -409,9 +415,9 @@ namespace NDSToolkit
                 {
                     string AddyOnly = line.Substring(0, 8);
                     string ValyOnly = line.Substring(9, 8);
-                    int AddyConvert = int.Parse(AddyOnly, NumberStyles.AllowHexSpecifier);
-                    int ValyConvert = int.Parse(ValyOnly, NumberStyles.AllowHexSpecifier);
-                    int OffyConvert = int.Parse(CodeOffset.Text, NumberStyles.AllowHexSpecifier);
+                    int AddyConvert = HexStrToInt(AddyOnly);
+                    int ValyConvert = HexStrToInt(ValyOnly);
+                    int OffyConvert = HexStrToInt(CodeOffset.Text);
 
                     if (RegexMatches(line, @"D[36-9A-B]0{6}\s+[0-9A-F]{8}")) //Dx Lines
                     {
@@ -514,15 +520,15 @@ namespace NDSToolkit
             string check = "";
 
             string TempCount = Convert.ToInt32(LoopCount.Text).ToString("X8");
-            int HalfOffset = int.Parse(LoopOffset.Text, NumberStyles.AllowHexSpecifier);
+            int HalfOffset = HexStrToInt(LoopOffset.Text);
             string FullOffset = HalfOffset.ToString("X8");
 
             //get the correct block offset by subtracting 1 and convert it to hex
-            int nBlock = int.Parse(TempCount, NumberStyles.AllowHexSpecifier); nBlock -= 1;
+            int nBlock = HexStrToInt(TempCount); nBlock -= 1;
             string ConvCount = nBlock.ToString("X8");
 
             //check offset
-            int TempOffset = int.Parse(LoopOffset.Text, NumberStyles.AllowHexSpecifier);
+            int TempOffset = HexStrToInt(LoopOffset.Text);
 
             if (TempOffset == 1) check = D8;
             else if (TempOffset == 2) check = D7;
@@ -547,7 +553,7 @@ namespace NDSToolkit
 
                     if (!String.IsNullOrEmpty(LoopInc.Text)) //if there's text in the increment textbox, add the value increment.
                     {
-                        int HalfInc = int.Parse(LoopInc.Text, NumberStyles.AllowHexSpecifier);
+                        int HalfInc = HexStrToInt(LoopInc.Text);
                         string FullInc = HalfInc.ToString("X8");
                         LoopOutput.Text += D4 + FullInc + '\n' + D2;
                     }
