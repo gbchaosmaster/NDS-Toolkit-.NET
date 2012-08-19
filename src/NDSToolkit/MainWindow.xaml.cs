@@ -25,7 +25,7 @@ namespace NDSToolkit
         const string DC = "DC000000 ", C0 = "C0000000 ";
         const string D4 = "D4000000 ", D5 = "D5000000 ";
         const string D6 = "D6000000 ", D7 = "D7000000 ";
-        const string D8 = "D8000000 "; 
+        const string D8 = "D8000000 ";
 
         public MainWindow()
         {
@@ -35,7 +35,7 @@ namespace NDSToolkit
         #region MenuItems
         private void ExitMenu_Click(object sender, RoutedEventArgs e)
         {
-            this.Close(); 
+            this.Close();
         }
 
         private void AboutMenu_Click(object sender, RoutedEventArgs e)
@@ -50,9 +50,14 @@ namespace NDSToolkit
         #endregion
 
         #region GlobalFunctions
-        private bool Valid_Code(string code, string pattern)
+        private int HexStrToInt(string str)
         {
-            return Regex.IsMatch(code, pattern, RegexOptions.IgnoreCase);
+            return int.Parse(str, NumberStyles.AllowHexSpecifier);
+        }
+
+        private bool RegexMatches(string str, string re)
+        {
+            return Regex.IsMatch(str, re, RegexOptions.IgnoreCase);
         }
 
         private bool Verify(string code)
@@ -74,7 +79,7 @@ namespace NDSToolkit
                 "\n", lines
             ).Replace(" ", "").Replace("\t", "").Replace("\n", "").Replace("\r", "");
 
-            return final.Length % 16 == 0 && Valid_Code(final, @"[0-9a-fA-F]+");
+            return final.Length % 16 == 0 && RegexMatches(final, @"[0-9A-F]+");
         }
         #endregion
 
@@ -99,7 +104,7 @@ namespace NDSToolkit
         {
             int GBATotal = 0, NDSTotal = 0;
             bool GBA = false, NDS = false;
-         
+
             if (chkA.IsChecked == true)
                 GBATotal |= 0x0001;
             if (chkB.IsChecked == true)
@@ -128,7 +133,7 @@ namespace NDSToolkit
                 NDSTotal |= 0x2000;
             if (chkF.IsChecked == true)
                 NDSTotal |= 0x8000;
-            
+
             BTN.ButtonCode(GBATotal, NDSTotal, GBA, NDS,ButtonInput, ButtonOutput, NDSTst, GBATst);
         }
 
@@ -167,7 +172,7 @@ namespace NDSToolkit
         #endregion
 
         #region PointerSearcher
-        const string binFilter = "Binary Files (*.bin)|*.bin|All Files (*.*)|*.*";
+        const string binFilter = "Binary Files (*.bin)|*.bin|All Files|*";
 
         long Length1 = 0, Length2 = 0;
 
@@ -181,8 +186,7 @@ namespace NDSToolkit
                 Length1 = openFileOne.OpenFile().Length;
             }
 
-            string ReadToAddy1 = FileOneRead.Text.Substring(FileOneRead.Text.IndexOf(".bin") - 8, 8);
-            AddressOne.Text = Valid_Code(ReadToAddy1, "[0-F]{8}") ? ReadToAddy1 : "";
+            ParseFileName(FileOneRead.Text, AddressOne);
         }
         private void FileTwo_Click(object sender, RoutedEventArgs e)
         {
@@ -194,8 +198,15 @@ namespace NDSToolkit
                 Length2 = openFileTwo.OpenFile().Length;
             }
 
-            string ReadToAddy2 = FileTwoRead.Text.Substring(FileTwoRead.Text.IndexOf(".bin") - 8, 8);
-            AddressTwo.Text = Valid_Code(ReadToAddy2, "[0-F]{8}") ? ReadToAddy2 : "";
+            ParseFileName(FileTwoRead.Text, AddressTwo);
+        }
+        private void ParseFileName(string filename, TextBox address)
+        {
+            //Helder's requested Pointer Searcher feature
+            //auto-fill the address box if the name of the .bin file is of the
+            //format FileName-XXXXXXXX.bin
+            string last8 = filename.Substring(filename.IndexOf(".bin") - 8, 8);
+            address.Text = RegexMatches(last8, @"[0-9A-F]{8}") ? last8.ToUpper() : "";
         }
 
         private void PointerSearch_Click(object sender, RoutedEventArgs e)
@@ -203,7 +214,7 @@ namespace NDSToolkit
             //Check if both files have been opened
             if (Length1 == 0 || Length2 == 0 || Length1 != Length2)
             {
-                MessageBox.Show(this, "Please upload two files of the same size.", 
+                MessageBox.Show(this, "Please upload two files of the same size.",
                                 "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -219,7 +230,7 @@ namespace NDSToolkit
             //Check if the addresses are the same
             if (AddressOne.Text == AddressTwo.Text)
             {
-                MessageBox.Show(this, "Please input two different addresses.", 
+                MessageBox.Show(this, "Please input two different addresses.",
                                 "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -227,7 +238,7 @@ namespace NDSToolkit
             //Check if the user entered an address with less than 7 chars
             if (AddressOne.Text.Length < 7 || AddressTwo.Text.Length < 7)
             {
-                MessageBox.Show(this, "Please check to see if both addresses are 7-8 characters long.", 
+                MessageBox.Show(this, "Please check to see if both addresses are 7-8 characters long.",
                                 "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -235,7 +246,7 @@ namespace NDSToolkit
             PtARDS.Clear();
             ptrResults.Items.Clear();
             StringBuilder ptrCode = new StringBuilder();
-            int hc = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
+            int hc = HexStrToInt(HexValue.Text);
             int MaxOffsetTest = int.Parse(MaxOffset.Text, NumberStyles.HexNumber);
             int DesiredOffset = Positive.IsChecked == true ? Math.Abs(MaxOffsetTest) : -Math.Abs(MaxOffsetTest);
 
@@ -276,8 +287,8 @@ namespace NDSToolkit
                                 MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-  
-            /*Smallest = smallest value, 
+
+            /*Smallest = smallest value,
              *SmallestAddy1 = smallest address 1
              */
 
@@ -323,9 +334,9 @@ namespace NDSToolkit
         {
             StringBuilder ptrCode = new StringBuilder();
 
-            int hc = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
-            int address = int.Parse(addressStr, NumberStyles.AllowHexSpecifier);
-            int offset = int.Parse(offsetStr, NumberStyles.AllowHexSpecifier);
+            int hc = HexStrToInt(HexValue.Text);
+            int address = HexStrToInt(addressStr);
+            int offset = HexStrToInt(offsetStr);
 
             ptrCode.Append(String.Format("6{0:X7} 00000000\nB{0:X7} 00000000\n", address));
             ptrCode.Append(
@@ -346,7 +357,7 @@ namespace NDSToolkit
                 offset, hc
                 )
             );
-            
+
             PtARDS.Text = ptrCode.ToString();
         }
 
@@ -354,7 +365,7 @@ namespace NDSToolkit
 
         private string getCodeType()
         {
-            int hc = int.Parse(HexValue.Text, NumberStyles.AllowHexSpecifier);
+            int hc = HexStrToInt(HexValue.Text);
 
             //get the code type based on the Hex Value input
             int ct = hc >= 0 && hc <= 255
@@ -370,44 +381,44 @@ namespace NDSToolkit
         #region CodePorter
         private void CodeOutput_TextChanged(object sender, TextChangedEventArgs e)
         {
-            //elixirdream's requested feature 
+            //elixirdream's requested feature
             CodeOutput.IsReadOnly = String.IsNullOrEmpty(CodeOutput.Text);
         }
 
         private void CodePort_Click(object sender, RoutedEventArgs e)
         {
             string Ported = "";
-            CodeOutput.Clear(); 
+            CodeOutput.Clear();
             StringBuilder cb = new StringBuilder();
 
             //no input? alert the user.
             if (String.IsNullOrEmpty(CodeInput.Text))
             {
-                MessageBox.Show(this, "There is no code input.", "Error", 
+                MessageBox.Show(this, "There is no code input.", "Error",
                                 MessageBoxButton.OK, MessageBoxImage.Error);
-                return; 
+                return;
             }
 
             //no offset? alert the user.
             if (String.IsNullOrEmpty(CodeOffset.Text))
             {
-                MessageBox.Show(this, "No offset has been specified.", "Error", 
+                MessageBox.Show(this, "No offset has been specified.", "Error",
                                 MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             foreach (string line in CodeInput.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
             {
-                if (Valid_Code(line, @"[0-F]{8}\s[0-F]{8}") &&
-                    !Valid_Code(line, @"[CD][0-2C4-5]0{6}\s[0-F]{8}|[3-A]4[0-F]{6}\s[0-F]{8}|927[0-F]{5}\s[0-F]{8}"))
+                if (RegexMatches(line, @"[0-9A-F]{8}\s+[0-9A-F]{8}") &&
+                    !RegexMatches(line, @"[CD][C0-24-5]0{6}\s+[0-9A-F]{8}|[3-9A]4[0-9A-F]{6}\s+[0-9A-F]{8}|927[0-9A-F]{5}\s+[0-9A-F]{8}"))
                 {
                     string AddyOnly = line.Substring(0, 8);
                     string ValyOnly = line.Substring(9, 8);
-                    int AddyConvert = int.Parse(AddyOnly, NumberStyles.AllowHexSpecifier);
-                    int ValyConvert = int.Parse(ValyOnly, NumberStyles.AllowHexSpecifier);
-                    int OffyConvert = int.Parse(CodeOffset.Text, NumberStyles.AllowHexSpecifier);
+                    int AddyConvert = HexStrToInt(AddyOnly);
+                    int ValyConvert = HexStrToInt(ValyOnly);
+                    int OffyConvert = HexStrToInt(CodeOffset.Text);
 
-                    if (Valid_Code(line, @"D[36-B]0{6}\s[0-F]{8}")) //Dx Lines
+                    if (RegexMatches(line, @"D[36-9A-B]0{6}\s+[0-9A-F]{8}")) //Dx Lines
                     {
                         Ported = CodeAdd.IsChecked == true ? (ValyConvert + OffyConvert).ToString("X8") :
                             (ValyConvert - OffyConvert).ToString("X8");
@@ -443,59 +454,17 @@ namespace NDSToolkit
         }
         #endregion
 
-        #region PatchCodeBuilder
-        private void PatchBuild_Click(object sender, RoutedEventArgs e)
-        {
-            PatchOutput.Clear();
-            PatchInput.Text = PatchInput.Text.Trim();
-            StringBuilder pb = new StringBuilder();
-            String[] PatchCode = PatchInput.Text.Split(new String[] { Environment.NewLine }, StringSplitOptions.None);
-
-            int CodeOffset = PatchInput.LineCount; //get the number of lines
-            int CodeCheck = CodeOffset;
-            CodeOffset *= 4; //multiply by 4 to get the offset
-
-            string CodeAddress = PatchCode[0].Substring(1, 8);
-            pb.Append("E" + CodeAddress + CodeOffset.ToString("X8") + '\n');
-
-            for (int y = 0; y < PatchCode.Length; y++)
-            {
-                string CodeValues = PatchCode[y].Substring(9, 8);
-
-                if (y % 2 == 0)
-                    pb.Append(CodeValues + " ");
-                else
-                    pb.Append(CodeValues + '\n');
-            }
-
-            if (CodeCheck % 2 != 0)
-                pb.Append("00000000");
-
-            PatchOutput.Text = pb.ToString();
-        }
-
-        private void PatchPaste_Click(object sender, RoutedEventArgs e)
-        {
-            PatchInput.Paste();
-        }
-
-        private void PatchCopy_Click(object sender, RoutedEventArgs e)
-        {
-            Clipboard.SetText(PatchOutput.Text);
-        }
-
-        private void PatchClear_Click(object sender, RoutedEventArgs e)
-        {
-            PatchInput.Clear();
-            PatchOutput.Clear();
-        }
-        #endregion
-
         #region LoopCodeGenerator
-        private void LoopBase_TextChanged(object sender, TextChangedEventArgs e)
+        private void LoopBase_KeyDown(object sender, KeyEventArgs e)
         {
-            //Loop Code Generator 
-            if (LoopBase.Text.Length == 8) 
+            /*KeyDown event on LoopBase to-
+             *1. Make sure only hex digits can be pressed
+             *2. Add a space for the user on after they enter digit 8
+             */
+
+            HexOnly_KeyDown(sender, e);
+
+            if (LoopBase.Text.Length == 8 && e.Key != Key.Back)
             {
                 LoopBase.Text += " ";
                 LoopBase.SelectionStart = 10;
@@ -507,55 +476,61 @@ namespace NDSToolkit
             bool run = true;
             string check = "";
 
-            string TempCount = Convert.ToInt32(LoopCount.Text).ToString("X8");
-            int HalfOffset = int.Parse(LoopOffset.Text, NumberStyles.AllowHexSpecifier);
-            string FullOffset = HalfOffset.ToString("X8");
+            string FullOffset = HexStrToInt(LoopOffset.Text).ToString("X8");
 
-            //get the correct block offset by subtracting 1 and convert it to hex
-            int nBlock = int.Parse(TempCount, NumberStyles.AllowHexSpecifier); nBlock -= 1;
-            string ConvCount = nBlock.ToString("X8");
+            //get the correct block offset by subtracting 1 and convert it to hex string
+            string ConvCount = (Convert.ToInt32(LoopCount.Text) - 1).ToString("X8");
 
-            //check offset
-            int TempOffset = int.Parse(LoopOffset.Text, NumberStyles.AllowHexSpecifier);
-
-            if (TempOffset == 1) check = D8;
-            else if (TempOffset == 2) check = D7;
-            else if (TempOffset == 4) check = D6;
-            else run = false;
+            //check the offset
+            switch (HexStrToInt(LoopOffset.Text))
+            {
+                case 1:
+                    check = D8;
+                    break;
+                case 2:
+                    check = D7;
+                    break;
+                case 4:
+                    check = D6;
+                    break;
+                default:
+                    run = false;
+                    break;
+            }
 
             //Did the user enter a full code?
-            if (LoopBase.Text.Length != 17)
+            if (!RegexMatches(LoopBase.Text, @"[0-9A-F]{8} [0-9A-F]{8}"))
             {
                 LoopOutput.Clear();
                 MessageBox.Show(this, "Please enter a full code (XXXXXXXX YYYYYYYY).",
                     "Base Code Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            else if (LoopBase.Text.Length == 17 && run)
+            else if (run)
             {
-                string BaseAddy = LoopBase.Text.Substring(0, 8); //grab the address
-                string BaseValy = LoopBase.Text.Substring(9, 8); //grab the value
-
                 if (LoopBase.Text[0] == '0')
                 {
-                    LoopOutput.Text = D5 + BaseValy + '\n' + C0 + ConvCount + '\n' + check + BaseAddy + '\n';
+                    LoopOutput.Text = String.Format(
+                        "{0}{1}\n{2}{3}\n{4}{5}\n",
+                        D5, LoopBase.Text.Substring(9, 8),
+                        C0, ConvCount,
+                        check, LoopBase.Text.Substring(0, 8)
+                    );
 
-                    if (!String.IsNullOrEmpty(LoopInc.Text)) //if there's text in the increment textbox, add the value increment.
-                    {
-                        int HalfInc = int.Parse(LoopInc.Text, NumberStyles.AllowHexSpecifier);
-                        string FullInc = HalfInc.ToString("X8");
-                        LoopOutput.Text += D4 + FullInc + '\n' + D2;
-                    }
-                    else LoopOutput.Text += D2; //else, don't add the value increment.
+                    LoopOutput.Text += !String.IsNullOrEmpty(LoopInc.Text)
+                                       //if there's text in the increment textbox, add the value increment.
+                                       ? D4 + HexStrToInt(LoopInc.Text).ToString("X8") + '\n' + D2
+                                       //else, don't add the value increment.
+                                       : D2;
                 }
                 else
                 {
                     LoopOutput.Clear();
-                    MessageBox.Show(this, "Please check to see if your base code starts with a '0' and if you've entered " + 
-                                    "an offset increment of 1, 2, or 4.", "Value Increment Error", MessageBoxButton.OK, 
+                    MessageBox.Show(this, "Please check to see if your base code starts with a '0' and if you've entered " +
+                                    "an offset increment of 1, 2, or 4.", "Value Increment Error", MessageBoxButton.OK,
                                                                                                 MessageBoxImage.Error);
                 }
             }
-            else if (LoopBase.Text.Length == 17 && !run)
+            else
             {
                 if (LoopBase.Text[0] >= '0' && LoopBase.Text[0] < '3')
                     LoopOutput.Text = C0 + ConvCount + '\n' + LoopBase.Text + '\n' + DC + FullOffset + '\n' + D2;
@@ -579,6 +554,52 @@ namespace NDSToolkit
                     txtFields.Clear();
                 }
             }
+        }
+        #endregion
+
+        #region PatchCodeBuilder
+        private void PatchBuild_Click(object sender, RoutedEventArgs e)
+        {
+            PatchInput.Text = PatchInput.Text.Trim();
+            StringBuilder pb = new StringBuilder();
+            String[] PatchCode = PatchInput.Text.Split(new String[] { Environment.NewLine }, StringSplitOptions.None);
+
+            //multiply number of lines by 4 to get the offset
+            int CodeOffset = PatchInput.LineCount * 4;
+
+            string CodeAddress = PatchCode[0].Substring(1, 8);
+            pb.Append("E" + CodeAddress + CodeOffset.ToString("X8") + '\n');
+
+            for (int i = 0; i < PatchCode.Length; ++i)
+            {
+                string CodeValues = PatchCode[i].Substring(9, 8);
+
+                if (i % 2 == 0)
+                    pb.Append(CodeValues + " ");
+                else
+                    pb.Append(CodeValues + '\n');
+            }
+
+            if (PatchInput.LineCount % 2 != 0)
+                pb.Append("00000000");
+
+            PatchOutput.Text = pb.ToString();
+        }
+
+        private void PatchPaste_Click(object sender, RoutedEventArgs e)
+        {
+            PatchInput.Paste();
+        }
+
+        private void PatchCopy_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(PatchOutput.Text);
+        }
+
+        private void PatchClear_Click(object sender, RoutedEventArgs e)
+        {
+            PatchInput.Clear();
+            PatchOutput.Clear();
         }
         #endregion
 
