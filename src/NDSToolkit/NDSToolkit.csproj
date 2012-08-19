@@ -51,7 +51,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>programico.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -130,13 +131,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="programico.ico" />
+    <Resource Include="Icons\Icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\programico.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Search.png" />
+    <Resource Include="Images\Search.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\DownloadBackground.png" />
@@ -145,7 +143,7 @@
     <Resource Include="Images\DownloadText.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="DownloadIcon.ico" />
+    <Resource Include="Icons\DownloadIcon.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
