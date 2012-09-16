@@ -16,11 +16,11 @@ namespace NDSToolkit
     /// </summary>
     public partial class MainWindow : Window
     {
-        //File Dialogs
+        // File Dialogs
         OpenFileDialog openFileOne = new OpenFileDialog();
         OpenFileDialog openFileTwo = new OpenFileDialog();
 
-        //Code types
+        // Code types
         const string D2 = "D2000000 00000000";
         const string DC = "DC000000 ", C0 = "C0000000 ";
         const string D4 = "D4000000 ", D5 = "D5000000 ";
@@ -134,7 +134,7 @@ namespace NDSToolkit
             if (chkF.IsChecked == true)
                 NDSTotal |= 0x8000;
 
-            BTN.ButtonCode(GBATotal, NDSTotal, GBA, NDS,ButtonInput, ButtonOutput, NDSTst, GBATst);
+            BTN.ButtonCode(GBATotal, NDSTotal, GBA, NDS, ButtonInput, ButtonOutput, NDSTst, GBATst);
         }
 
         private void ButtonClear_Click(object sender, RoutedEventArgs e)
