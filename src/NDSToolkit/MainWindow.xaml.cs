@@ -560,7 +560,7 @@ namespace NDSToolkit
         {
             PatchInput.Text = PatchInput.Text.Trim();
             StringBuilder pb = new StringBuilder();
-            String[] PatchCode = PatchInput.Text.Split(new String[] { Environment.NewLine }, StringSplitOptions.None);
+            String[] PatchCode = PatchInput.Text.Split('\n');
 
             //Multiply number of lines by 4 to get the offset
             int CodeOffset = PatchInput.LineCount * 4;
