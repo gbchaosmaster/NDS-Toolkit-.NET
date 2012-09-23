@@ -45,5 +45,5 @@ Code Beautifier:
 
 Usrcheat Downloader:
 
-![Usrcheat Downloader](http://syntechx.com/images/NDSToolkit/UsrcheatDownload.png)
+![Usrcheat Downloader](http://syntechx.com/images/NDSToolkit/UsrcheatDownloader.png)
 
