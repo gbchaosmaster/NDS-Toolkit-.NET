@@ -565,8 +565,12 @@ namespace NDSToolkit
             //Multiply number of lines by 4 to get the offset
             int CodeOffset = PatchInput.LineCount * 4;
 
+            //If the user didn't enter a full code, return/exit
+            if (PatchInput.Text.Length < 17)
+                return;
+
             string CodeAddress = PatchCode[0].Substring(1, 8);
-            pb.Append("E" + CodeAddress + CodeOffset.ToString("X8") + '\n');
+            pb.AppendLine('E' + CodeAddress + CodeOffset.ToString("X8"));
 
             for (int i = 0; i < PatchCode.Length; i++)
             {
