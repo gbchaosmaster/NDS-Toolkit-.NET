@@ -5,12 +5,12 @@ namespace NDSToolkit
 {
     class ButtonGenerator
     {
-        string D2 = "D2000000 00000000";
         public void ButtonCode(int GBATotal, int NDSTotal, bool GBA, bool NDS, TextBox ButtonInput, TextBox ButtonOutput, TextBox NDSTst, TextBox GBATst)
         {
             /*NOT_GBA and NOT_NDS will hold the 
              *16-bit values of NOT_GBATotal and NOT_NDSTotal
              */
+            string D2 = "D2000000 00000000";
             ushort NOT_GBA = (ushort)~GBATotal;
             ushort NOT_NDS = (ushort)~NDSTotal; 
 
