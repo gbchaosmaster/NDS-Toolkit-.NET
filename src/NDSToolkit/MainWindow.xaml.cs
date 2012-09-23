@@ -421,18 +421,20 @@ namespace NDSToolkit
 
                     if (RegexMatches(line, @"D[36-9A-B]0{6}\s+[0-9A-F]{8}")) //Dx Lines
                     {
-                        Ported = CodeAdd.IsChecked == true ? (ValyConvert + OffyConvert).ToString("X8") :
-                            (ValyConvert - OffyConvert).ToString("X8");
-                        cb.Append(AddyOnly.ToUpper() + " " + Ported.ToUpper() + '\n');
+                        Ported = CodeAdd.IsChecked == true 
+                            ? (ValyConvert + OffyConvert).ToString("X8") 
+                            : (ValyConvert - OffyConvert).ToString("X8");
+                        cb.AppendLine(AddyOnly.ToUpper() + " " + Ported.ToUpper());
                     }
                     else //Non-Dx lines
                     {
-                        Ported = CodeAdd.IsChecked == true ? (AddyConvert + OffyConvert).ToString("X8") :
-                            (AddyConvert - OffyConvert).ToString("X8");
-                        cb.Append(Ported.ToUpper() + " " + ValyOnly.ToUpper() + '\n');
+                        Ported = CodeAdd.IsChecked == true 
+                            ? (AddyConvert + OffyConvert).ToString("X8") 
+                            : (AddyConvert - OffyConvert).ToString("X8");
+                        cb.AppendLine(Ported.ToUpper() + " " + ValyOnly.ToUpper());
                     }
                 }
-                else cb.Append(line + '\n'); //Everything else
+                else cb.AppendLine(line); //Everything else
             }
             CodeOutput.Text = cb.ToString();
         }
@@ -541,8 +543,8 @@ namespace NDSToolkit
             else
             {
                 if (LoopBase.Text[0] >= '0' && LoopBase.Text[0] < '3')
-                    LoopOutput.Text = 
-                        String.Format("{0}{1}\n{2}\n{3}{4}\n{5}",
+                    LoopOutput.Text = String.Format(
+                        "{0}{1}\n{2}\n{3}{4}\n{5}",
                         C0, ConvCount,
                         LoopBase.Text,
                         DC, FullOffset,
