@@ -541,12 +541,15 @@ namespace NDSToolkit
             else
             {
                 if (LoopBase.Text[0] >= '0' && LoopBase.Text[0] < '3')
-                    LoopOutput.Text = String.Format("{0}{1}\n{2}\n{3}{4}\n{5}", 
-                                                    C0, ConvCount, LoopBase.Text, 
-                                                             DC, FullOffset, D2);
-                else 
-                    MessageBox.Show(this, "Invalid Data! Please start your code off with a 0, 1, or 2.", "Data Input Error",
-                                                                                 MessageBoxButton.OK, MessageBoxImage.Error);
+                    LoopOutput.Text = 
+                        String.Format("{0}{1}\n{2}\n{3}{4}\n{5}",
+                        C0, ConvCount,
+                        LoopBase.Text,
+                        DC, FullOffset,
+                        D2
+                    );
+                else MessageBox.Show(this, "Invalid Data! Please start your code off with a 0, 1, or 2.", 
+                                           "Data Input Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -588,8 +591,7 @@ namespace NDSToolkit
 
                 if (i % 2 == 0)
                     pb.Append(CodeValues + " ");
-                else
-                    pb.AppendLine(CodeValues);
+                else pb.AppendLine(CodeValues);
             }
 
             if (PatchInput.LineCount % 2 != 0)
