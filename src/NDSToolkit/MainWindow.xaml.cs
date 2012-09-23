@@ -477,6 +477,13 @@ namespace NDSToolkit
             bool run = true;
             string check = "";
 
+            //Check if the Base, Increment, or Offset text boxes are empty
+            //If they are, return/exit
+            if (String.IsNullOrEmpty(LoopBase.Text) || 
+                String.IsNullOrEmpty(LoopCount.Text) || 
+                String.IsNullOrEmpty(LoopOffset.Text))
+                return;
+
             string FullOffset = HexStrToInt(LoopOffset.Text).ToString("X8");
 
             //Get the correct block offset by subtracting 1 and convert it to hex string
@@ -534,8 +541,11 @@ namespace NDSToolkit
             else
             {
                 if (LoopBase.Text[0] >= '0' && LoopBase.Text[0] < '3')
-                    LoopOutput.Text = C0 + ConvCount + '\n' + LoopBase.Text + '\n' + DC + FullOffset + '\n' + D2;
-                else MessageBox.Show(this, "Invalid Data! Please start your code off with a 0, 1, or 2.", "Data Input Error",
+                    LoopOutput.Text = String.Format("{0}{1}\n{2}\n{3}{4}\n{5}", 
+                                                    C0, ConvCount, LoopBase.Text, 
+                                                             DC, FullOffset, D2);
+                else 
+                    MessageBox.Show(this, "Invalid Data! Please start your code off with a 0, 1, or 2.", "Data Input Error",
                                                                                  MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
