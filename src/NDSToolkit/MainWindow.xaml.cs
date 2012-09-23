@@ -575,7 +575,7 @@ namespace NDSToolkit
                 if (i % 2 == 0)
                     pb.Append(CodeValues + " ");
                 else
-                    pb.Append(CodeValues + '\n');
+                    pb.AppendLine(CodeValues);
             }
 
             if (PatchInput.LineCount % 2 != 0)
