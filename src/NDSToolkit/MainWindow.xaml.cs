@@ -55,7 +55,7 @@ namespace NDSToolkit
             return int.Parse(str, NumberStyles.AllowHexSpecifier);
         }
 
-        private bool RegexMatches(string str, string re)
+        private bool Valid(string str, string re)
         {
             return Regex.IsMatch(str, re, RegexOptions.IgnoreCase);
         }
@@ -79,7 +79,7 @@ namespace NDSToolkit
                 "\n", lines
             ).Replace(" ", "").Replace("\t", "").Replace("\n", "").Replace("\r", "");
 
-            return final.Length % 16 == 0 && RegexMatches(final, @"[0-9A-F]+");
+            return final.Length % 16 == 0 && Valid(final, @"[0-9A-F]+");
         }
         #endregion
 
@@ -206,7 +206,7 @@ namespace NDSToolkit
             if (filename.Length >= 12)
             {
                 string last8 = filename.Substring(filename.Length - 12, 8);
-                address.Text = RegexMatches(last8, @"[0-9A-F]{8}") ? last8.ToUpper() : "";
+                address.Text = Valid(last8, @"[0-9A-F]{8}") ? last8.ToUpper() : "";
             }
         }
 
@@ -410,8 +410,8 @@ namespace NDSToolkit
 
             foreach (string line in CodeInput.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
             {
-                if (RegexMatches(line, @"[0-9A-F]{8}\s+[0-9A-F]{8}") &&
-                    !RegexMatches(line, @"[CD][C0-24-5]0{6}\s+[0-9A-F]{8}|[3-9A]4[0-9A-F]{6}\s+[0-9A-F]{8}|927[0-9A-F]{5}\s+[0-9A-F]{8}"))
+                if (Valid(line, @"[0-9A-F]{8}\s+[0-9A-F]{8}") &&
+                    !Valid(line, @"[CD][C0-24-5]0{6}\s+[0-9A-F]{8}|[3-9A]4[0-9A-F]{6}\s+[0-9A-F]{8}|927[0-9A-F]{5}\s+[0-9A-F]{8}"))
                 {
                     string AddyOnly = line.Substring(0, 8);
                     string ValyOnly = line.Substring(9, 8);
@@ -419,7 +419,7 @@ namespace NDSToolkit
                     int ValyConvert = HexStrToInt(ValyOnly);
                     int OffyConvert = HexStrToInt(CodeOffset.Text);
 
-                    if (RegexMatches(line, @"D[36-9A-B]0{6}\s+[0-9A-F]{8}")) //Dx Lines
+                    if (Valid(line, @"D[36-9A-B]0{6}\s+[0-9A-F]{8}")) //Dx Lines
                     {
                         Ported = CodeAdd.IsChecked == true 
                             ? (ValyConvert + OffyConvert).ToString("X8") 
@@ -487,9 +487,7 @@ namespace NDSToolkit
                 return;
 
             string FullOffset = HexStrToInt(LoopOffset.Text).ToString("X8");
-
-            //Get the correct block offset by subtracting 1 and convert it to hex string
-            string ConvCount = (Convert.ToInt32(LoopCount.Text) - 1).ToString("X8");
+            string ConvCount = (Convert.ToInt32(LoopCount.Text) - 1).ToString("X8"); //Subtract 1 to get the right loop offset
 
             //Check the offset
             switch (HexStrToInt(LoopOffset.Text))
@@ -508,14 +506,15 @@ namespace NDSToolkit
                     break;
             }
 
-            //Did the user enter a full code?
-            if (!RegexMatches(LoopBase.Text, @"[0-9A-F]{8} [0-9A-F]{8}"))
+            //Did the user enter an invalid code?
+            if (!Valid(LoopBase.Text, @"[0-9A-F]{8} [0-9A-F]{8}"))
             {
                 LoopOutput.Clear();
-                MessageBox.Show(this, "Please enter a full code (XXXXXXXX YYYYYYYY).",
-                    "Base Code Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(this, "Please enter a full code.", "Base Code Error", 
+                                         MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            else if (run)
+            
+            if (run)
             {
                 if (LoopBase.Text[0] == '0')
                 {
@@ -550,8 +549,8 @@ namespace NDSToolkit
                         DC, FullOffset,
                         D2
                     );
-                else MessageBox.Show(this, "Invalid Data! Please start your code off with a 0, 1, or 2.", 
-                                           "Data Input Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                else MessageBox.Show(this, "Please start your code off with a 0, 1, or 2.", "Data Input Error",
+                                                                   MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
