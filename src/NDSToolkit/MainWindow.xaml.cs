@@ -487,7 +487,7 @@ namespace NDSToolkit
                 return;
 
             string FullOffset = HexStrToInt(LoopOffset.Text).ToString("X8");
-            string ConvCount = (Convert.ToInt32(LoopCount.Text) - 1).ToString("X8"); //Subtract 1 to get the right loop offset
+            string ConvCount = (Convert.ToInt32(LoopCount.Text) - 1).ToString("X8"); //Subtract 1 to get the loop offset
 
             //Check the offset
             switch (HexStrToInt(LoopOffset.Text))
@@ -512,6 +512,7 @@ namespace NDSToolkit
                 LoopOutput.Clear();
                 MessageBox.Show(this, "Please enter a full code.", "Base Code Error", 
                                          MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
             
             if (run)
@@ -537,6 +538,7 @@ namespace NDSToolkit
                     MessageBox.Show(this, "Please check to see if your base code starts with a '0' and if you've entered " +
                                     "an offset increment of 1, 2, or 4.", "Value Increment Error", MessageBoxButton.OK,
                                                                                                 MessageBoxImage.Error);
+                    return;
                 }
             }
             else
@@ -549,8 +551,12 @@ namespace NDSToolkit
                         DC, FullOffset,
                         D2
                     );
-                else MessageBox.Show(this, "Please start your code off with a 0, 1, or 2.", "Data Input Error",
-                                                                   MessageBoxButton.OK, MessageBoxImage.Error);
+                else
+                {
+                    MessageBox.Show(this, "Please start your code off with a 0, 1, or 2.", "Data Input Error",
+                                                                  MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
             }
         }
 
@@ -583,15 +589,15 @@ namespace NDSToolkit
             if (PatchInput.Text.Length < 17)
                 return;
 
-            string CodeAddress = PatchCode[0].Substring(1, 8);
-            pb.AppendLine('E' + CodeAddress + CodeOffset.ToString("X8"));
+            pb.AppendLine(String.Format("E{0} {1:X8}",
+            PatchCode[0].Substring(1, 7), CodeOffset));
 
             for (int i = 0; i < PatchCode.Length; i++)
             {
                 string CodeValues = PatchCode[i].Substring(9, 8);
 
                 if (i % 2 == 0)
-                    pb.Append(CodeValues + " ");
+                    pb.Append(CodeValues + ' ');
                 else pb.AppendLine(CodeValues);
             }
 
