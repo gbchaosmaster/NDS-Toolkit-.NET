@@ -7,7 +7,7 @@ It is simply an AiO NDS application with many features.
 
 ## Contributors
 
-Special thanks to the following contributers that helped get this project to
+Special thanks to the following contributors that helped get this project to
 where it is today:
 
  * [Abystus](http://gamehacking.org/vb/members/1474-Abystus)
