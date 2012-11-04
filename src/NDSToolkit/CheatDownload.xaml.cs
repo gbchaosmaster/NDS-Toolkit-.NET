@@ -18,7 +18,7 @@ namespace NDSToolkit
             InitializeComponent();
         }
 
-        const string usrcheat = "http://syntechx.com/downloads/usrcheat.rar";
+        const string usrcheat = "http://syntechx.com/downloads/nds_cheat_database/usrcheat.rar";
         private byte[] usrcheatDownloaded; //set the current size (in bytes)
         SaveFileDialog saveUsrcheat = new SaveFileDialog();
         private delegate void UpdateProgressBarDelegate(System.Windows.DependencyProperty dp, Object value);
