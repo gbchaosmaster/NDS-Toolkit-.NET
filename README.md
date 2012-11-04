@@ -5,7 +5,7 @@ project.
 
 It is simply an AiO NDS application with many features.
 
-## Contributers
+## Contributors
 
 Special thanks to the following contributers that helped get this project to
 where it is today:
