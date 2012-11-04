@@ -1168,17 +1168,7 @@
         n/uD+1jQ0edYiwWAkD36XIeLzzmAY0Hn/wH6CF6+hlqWdQAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="textBoxDescription.Text" xml:space="preserve">
-    <value>Formerly known as NDS Hacking Kit, NDS Toolkit is the continuation of that project; It's simply an AIO NDS Application with many features.
-
-Special Thanks:
-Abystus
-Scythe
-helder
-rimsky82
-elixirdream
-dragonboy269
-gbchaosmaster
-</value>
+  <data name="String1" xml:space="preserve">
+    <value />
   </data>
 </root>

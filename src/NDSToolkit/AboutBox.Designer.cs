@@ -138,7 +138,9 @@
             this.textBoxDescription.Size = new System.Drawing.Size(271, 126);
             this.textBoxDescription.TabIndex = 23;
             this.textBoxDescription.TabStop = false;
-            this.textBoxDescription.Text = resources.GetString("textBoxDescription.Text");
+            this.textBoxDescription.Text = "Formerly known as NDS Hacking Kit, NDS Toolkit is the continuation of that project; " +
+                                           "It's simply an AIO NDS Application with many features.\r\n\r\nSpecial Thanks: \r\n" +
+                                           "Abystus\r\nScythe\r\nhelder\r\nrimsky82\r\nelixirdream\r\ndragonboy269\r\ngbchaosmaster";
             // 
             // okButton
             // 
