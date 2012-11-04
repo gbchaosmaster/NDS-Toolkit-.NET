@@ -15,6 +15,7 @@ where it is today:
  * [elixirdream](http://gamehacking.org/vb/members/2488-elixirdream)
  * [gbchaosmaster](https://github.com/gbchaosmaster)
  * [helder](http://gamehacking.org/vb/members/85-helder)
+ * [omarrrio](http://syntechx.com/forums/index.php?action=profile;u=5)
  * [rimsky82](http://gamehacking.org/vb/members/2578-rimsky82)
  * [Scythe](http://syntechx.com/forums/index.php?action=profile;u=2)
 
